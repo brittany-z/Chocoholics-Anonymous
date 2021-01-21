@@ -1,6 +1,10 @@
 # Chocoholics-Anonymous
 
 ## How to contribute
+1. [Setup](#Setup)
+2. [Setting up a branch](#Setting-up-a-branch)
+3. [Making Changes to the Code](#Making-changes-to-the-code)
+4. [Merge Conflicts](#Merge-Conflicts)
 
 ### Setup
 
@@ -54,3 +58,10 @@ And thats it! When you want to sync your local changes with the github remember 
 ```bash
 $ git push origin $name_of_branch
 ```
+### Merge Conflicts
+
+I have zero experience with merge conflicts and Github push requests. 
+
+Merge conflicts happen when a branch that isn't up to date with the main branch when it is combined with main. 
+
+Lets just say I hope we don't have to deal with this issue. If we do though, it will be a learning experience for all of us. 
