@@ -30,7 +30,7 @@ After inputting your username and password, you there will be some output to scr
 ```bash
 Total 0 (delta 0), reused 0 (delta 0)
 remote:
-remote: Create a pull request for 'EB_test_github_merges' on GitHub by visiting:
+remote: Create a pull request for 'EB_functionality_being_added' on GitHub by visiting:
 remote:      https://github.com/redawl/Chocoholics-Anonymous/pull/new/EB_functionality_being_added
 remote:
 To https://github.com/redawl/Chocoholics-Anonymous.git
