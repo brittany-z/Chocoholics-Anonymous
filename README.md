@@ -2,6 +2,7 @@
 
 ## How to contribute
 1. [Setup](#Setup)
+    1. [SSH Keys](#SSH-Keys)
 2. [Setting up a branch](#Setting-up-a-branch)
 3. [Making Changes to the Code](#Making-changes-to-the-code)
 5. [Keeping your Branch up to Date](#Keeping-your-Branch-up-to-Date)
@@ -15,7 +16,54 @@ $ cd Chocoholics-Anonymous
 $ git config --global user.name "Your Name"
 $ git config --global user.email "youremail@yourdomain.com"
 ```
+#### SSH Keys
 
+You may notice that every time you want to interact with the Github, you have to input your username and password, which will get quite annoying. The way to get around this is by using ssh keys. While they are not required, they will save you quite a lot of time. 
+
+To get started, type this into your terminal:
+```bash
+$ ssh-keygen -t rsa -C "example@pdx.edu"
+```
+You wil then get this prompt:
+```bash
+Enter file in which to save the key (/u/elburch/.ssh/id_rsa):
+```
+Only enter a file name if you know what you're doing, as this will cause you to need to change a bunch of configuration files. Press enter to proceed to the next prompt. 
+```bash
+Enter passphrase (empty for no passphrase):
+```
+This prompt is asking if you want to enter a passphrase every time you interact with github. If you leave it blank and press enter, then no passphrase will be required. 
+
+After getting passed the password prompt, you should see output like this:
+```bash
+The key fingerprint is:
+SHA256:upfotpzv1NVe71IfVXnszlXQB4eT13pXkXaXl+dgh/0 elburch@pdx.edu
+The key's randomart image is:
++---[RSA 3072]----+
+|              o@O|
+|              BB^|
+|             ..O%|
+|             .. E|
+|        S   . .+=|
+|       . . . . o=|
+|      .....   ..+|
+|     .o+o     ...|
+|     o*=o      ..|
++----[SHA256]-----+
+elburch@ruby:~/Desktop/Chocoholics-Anonymous$
+```
+Success! You have generated your ssh key!
+Now, output your public key to the screen by typing:
+```bash
+$ cat ~/.ssh/id_rsa.pub
+```
+Copy all the output of that command, then head over to Github. Click on your profile in the top right corner, and go to settings. Click on SSH and GPG keys, and click new ssh key. 
+
+For the title, I suggest using the name of the server that you created the ssh key on, since ssh keys are unique to servers. After that, paste the output from the cat command into the key field. 
+
+SSH keys should now be set up!
+
+Unfortunately if you followed this guide before and already cloned Chocoholics anonymous, you will need to delete the old repository, and clone it again, but this time use the SSH link, instead of the HTTPS link. If you are not asked to input your username and password, then you are good to go!
 ### Setting up a branch
 
 In order to start making changes to the code, please create a developement branch, separate from main. 
