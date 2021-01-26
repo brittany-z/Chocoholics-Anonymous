@@ -4,6 +4,7 @@
 1. [Setup](#Setup)
 2. [Setting up a branch](#Setting-up-a-branch)
 3. [Making Changes to the Code](#Making-changes-to-the-code)
+5. [Keeping your Branch up to Date]()
 4. [Merge Conflicts](#Merge-Conflicts)
 
 ### Setup
@@ -57,6 +58,16 @@ $ git commit -m "Nice descriptive message of what has been changed since the las
 And thats it! When you want to sync your local changes with the github remember to 'push' your changes to GitHub using:
 ```bash
 $ git push origin $name_of_branch
+```
+### Keeping your Branch up do Date
+
+If the main branch is updated while you are working on your branch, you must update your current branch to include the new changes. This is usually very simple, but can become more complicated if there were edits to the same files you are working on in the main branch. Best case scenario, updating you branch would go something like this:
+```bash
+$ git checkout main # Switch current branch to the main branch
+$ git pull origin # Pull new changes on the github to your local folder
+$git checkout $name_of_branch # Switch back to your branch
+$git merge main # Merges 
+
 ```
 ### Merge Conflicts
 
