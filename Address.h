@@ -3,10 +3,12 @@
 
 class Address
 {
-    public: 
+    public:
         string street;
         string city;
         string state;
+        unsigned int zip;
 
     private:
+
 }
