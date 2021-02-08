@@ -71,9 +71,9 @@ In order to start making changes to the code, please create a developement branc
 To do this, follow the instructions below:
 ```bash
 # Branch names should be your initials in uppercase, followed by a very short description of what functionality you are working on
-$ git branch $EB_functionality_being_added # creates a branch
-$ git checkout $EB_functionality_being_added # switch to new branch
-$ git push origin $EB_functionality_being_added # sync new branch with GitHub
+$ git branch EB_functionality_being_added # creates a branch
+$ git checkout EB_functionality_being_added # switch to new branch
+$ git push origin EB_functionality_being_added # sync new branch with GitHub
 ```
 After inputting your username and password, you there will be some output to screen, similar to this:
 ```bash
