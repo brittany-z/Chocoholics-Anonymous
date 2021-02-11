@@ -1,8 +1,11 @@
+#include "terminal.h"
 #include <iostream>
+using namespace std;
 
-int main()
-{
-  std::cout << "Hello World\n";
-  std::cout << "Testing, attention please\n";
-  return 0;
+
+int main(){
+    
+    cout << "\n\n\t\tCHOOOOOCOLAAAAAAATE.\n\n";
+
+    return 0;
 }
