@@ -16,11 +16,10 @@ class Data_center{
         //other than setting the pointers.
         int check_valid(const std::string & input, bool set); 
         void disp_map(int map_type);
-        void prov_report();
-        void mem_report();
+        void person_report();
         void pull_EFT();
         void sum_report();
-        void add();
+        void add_person();
         void remove(); 
         void update();
         void add_service();
