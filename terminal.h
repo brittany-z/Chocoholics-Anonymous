@@ -14,7 +14,7 @@ class Data_center{
         //or not, I was thinking about maybe using this method as a search as
         //well as a setter. Because a search method would do the same thing
         //other than setting the pointers.
-        int validate(const std::string & input, bool set); 
+        int check_valid(const std::string & input, bool set); 
         void disp_map(int map_type);
         void prov_report();
         void mem_report();
