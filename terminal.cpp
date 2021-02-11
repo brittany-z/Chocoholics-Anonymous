@@ -8,21 +8,44 @@ using namespace std;
 Data_center::Data_center(){
 }
 
+void Data_center::write_file(){
+}
 
-int Data_center::validate(const string & input){
+
+int Data_center::check_valid(const string & input, bool set){
     return 0;
 }
 
 
-void Data_center::provider_menu(const string & num){
+void Data_center::disp_map(int map_type){
 }
 
 
-void Data_center::manager_menu(const string & num){
+void Data_center::person_report(){
 }
 
 
-void Data_center::interactive_menu(){
+void Data_center::pull_EFT(){
+}
+
+
+void Data_center::sum_report(){
+}
+
+
+void Data_center::add_person(){
+}
+
+
+void Data_center::remove(){
+}
+
+
+void Data_center::update(){
+}
+
+
+void Data_center::add_service(){
 }
 
 
