@@ -3,6 +3,10 @@
 #include "utilities.h"
 
 
+const size_t NAME_MAX = 25;
+const size_t NUM_MAX = 9;
+
+
 class Name{
     
     public:
