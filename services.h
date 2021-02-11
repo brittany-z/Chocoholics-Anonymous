@@ -2,6 +2,7 @@
 
 
 // Service, Serv_date, Provider_service, and Member_service Classes
+const size_t COM_MAX = 100;
 
 class Service{
 
