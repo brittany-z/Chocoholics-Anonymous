@@ -2,6 +2,12 @@
 #include "services.h"
 
 
+const size_t STRT_MAX = 25;
+const size_t CITY_MAX = 14;
+const size_t STATE_MAX = 2;
+const size_t ZIP_MAX = 5;
+
+
 // Address, Provider, and Member Classes
 
 class Address: public Name{
