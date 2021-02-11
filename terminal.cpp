@@ -59,16 +59,11 @@ Terminal::Terminal(const Data_center & link){
 }
 
 
-int Terminal::validate(const string & input){
-    return 0;
+void Terminal::provider_menu(){
 }
 
 
-void Terminal::provider_menu(const string & num){
-}
-
-
-void Terminal::manager_menu(const string & num){
+void Terminal::manager_menu(){
 }
 
 
