@@ -63,19 +63,15 @@ void Address::read(){
         {
             cout << "\nPlease enter the state: ";
             getline(cin, state);
-            /*This long condition checks that the string is 2 chars long
-             * by calling the utility methods.*/
-        }while (state.empty() || exceed_max(state.length(), STATE_MAX)
-                || !equal_max(state.length(), STATE_MAX));
+            /*This checks that the string is 2 chars long*/
+        }while (state.empty() || !equal_max(state.length(), STATE_MAX));
 
         do
         {
             cout << "\nPlease enter the zip code: ";
             getline(cin, zip);
-            /*This long condition checks that the string is 5 chars long
-             * by calling the utility methods.*/
-        }while (zip.empty() || exceed_max(zip.length(), ZIP_MAX)
-                || !equal_max(zip.length(), ZIP_MAX));
+            /*This checks that the string is 5 chars long*/
+        }while (zip.empty() || !equal_max(zip.length(), ZIP_MAX));
 
         //Make sure input is correct. If not, loop again.
         cout << "\nYou entered:";
