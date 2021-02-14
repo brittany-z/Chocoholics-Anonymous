@@ -22,7 +22,7 @@ Service::Service(ifstream & in){
 
 
 /*Writes to file*/
-void Service::write_file(std::ofstream & out){
+void Service::write_file(std::ofstream & out) const{
 }
 
 
@@ -151,7 +151,7 @@ Serv_date::Serv_date(const Service & curr_ser): Service(curr_ser){
 
 
 /*Writes to file*/
-void Serv_date::write_file(ofstream & out){
+void Serv_date::write_file(ofstream & out) const{
 }
 
 
@@ -261,7 +261,7 @@ Provider_service::Provider_service(const Name & curr_mem, const Service & curr_s
 
 
 /*Writes to file*/
-void Provider_service::write_file(ofstream & out){
+void Provider_service::write_file(ofstream & out) const{
 }
 
 
@@ -301,7 +301,7 @@ Member_service::Member_service(const Name & curr_prov,
 
 
 /*Writes to file*/
-void Member_service::write_file(ofstream & out){
+void Member_service::write_file(ofstream & out) const{
 }
 
 
