@@ -13,7 +13,7 @@ class Data_center{
         //set is a flag to know if we need to set the pointers and permissions
         //or not, I was thinking about maybe using this method as a search as
         //well as a setter. Because a search method would do the same thing
-        //other than setting the pointers.
+        //other than setting the pointers and permissions.
         int check_valid(const std::string & input, bool set); 
         void disp_map(int map_type);
         void person_report();
@@ -23,9 +23,6 @@ class Data_center{
         void remove(); 
         void update();
         void add_service();
-        //void provider_menu(const std::string & num);
-        //void manager_menu(const std::string & num);
-        //void interactive_menu();
 
     private:
         char permissions;
@@ -42,14 +39,10 @@ class Terminal{
     public:
         Terminal();
         Terminal(const Data_center & link);
-        //int validate(const std::string & input);
         void provider_menu();
         void manager_menu();
         void start_menu(); //This will call validate in Data_center
     
     private:
         Data_center * data_link;
-        //Provider * curr_provider;
-        //Member * curr_member;
-        //std::map<std::string, Service> prov_dir;
 };
