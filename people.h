@@ -1,3 +1,5 @@
+#ifndef PEOPLE_H
+#define PEOPLE_H
 #include <list>
 #include "services.h"
 
@@ -67,3 +69,4 @@ class Member: public Address{
         bool suspended;
         std::list<Member_service> serv_list;
 };
+#endif
