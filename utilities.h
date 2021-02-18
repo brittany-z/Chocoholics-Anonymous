@@ -1,5 +1,5 @@
-#ifndef STRING_H
-#define STRING_H
+#ifndef UTILITIES_H
+#define UTILITIES_H
 #include <string>
 // Put your handy dandy utility function prototypes here.
 
