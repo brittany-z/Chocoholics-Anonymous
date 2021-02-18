@@ -1,3 +1,6 @@
+#ifndef TERMINAL_H
+#define TERMINAL_H
+
 #include <map>
 #include <unordered_map>
 #include "people.h"
@@ -19,7 +22,7 @@ class Data_center{
         void person_report();
         void pull_EFT();
         void sum_report();
-        void add_person();
+        void add_person(int type);
         void remove(); 
         void update();
         void add_service();
@@ -46,3 +49,4 @@ class Terminal{
     private:
         Data_center * data_link;
 };
+#endif
