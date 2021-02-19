@@ -1,3 +1,5 @@
+#ifndef UTILITIES_H
+#define UTILITIES_H
 #include <string>
 // Put your handy dandy utility function prototypes here.
 
@@ -13,4 +15,4 @@ bool equal_max(size_t str_len, size_t max);
 //Prompts and reads for a user number or a
 //service code depending on the int type
 std::string read_num(int type);
-
+#endif
