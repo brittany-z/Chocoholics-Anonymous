@@ -80,14 +80,15 @@ void Terminal::provider_menu(){
         cout << "\n";
     }
     
-    cout << "Welcome to the Manager Menu.\n\n";
+    cout << "Welcome to Interactive Mode.\n\n";
     int choice = 0;
 
     do{
         cout << "Here are your options:\n\n"
-             << "\t(1)  Input a Service\n"
-             << "\t(2)  Request Provider Directory\n"
-             << "\t(3)  Exit\n\n"
+             << "\t(1)  Add a new Provider or Member\n"
+             << "\t(2)  Remove an existing Provider or Member\n"
+             << "\t(3)  Update existing Provider or Member records\n"
+             << "\t(4)  Exit\n\n"
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
@@ -97,22 +98,25 @@ void Terminal::provider_menu(){
             cout << "\n";
         }
 
-        if(choice >= 1 && choice <= 2){
+        if(choice >= 1 && choice <= 3){
             switch(choice){
                 case 1:
-                    data_link->add_service();
+                    data_link->add_person();
                     break;
                 case 2:
-                    data_link->disp_map(4);
+                    data_link->remove();
+                    break;
+                case 3:
+                    data_link->update();
                     break;
             }
         }
 
-        else if(choice != 3){
+        else if(choice != 4){
             cout << "Error: Invalid selection. Please try again.\n\n";
         }
 
-    }while(choice != 3);
+    }while(choice != 4);
     
     return;
 }

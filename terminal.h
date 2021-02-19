@@ -22,7 +22,7 @@ class Data_center{
         void person_report();
         void pull_EFT();
         void sum_report();
-        void add_person(int type);
+        void add_person();
         void remove(); 
         void update();
         void add_service();
