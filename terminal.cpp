@@ -87,7 +87,7 @@ void Terminal::provider_menu(){
         cout << "Here are your options:\n\n"
              << "\t(1)  Input a Service\n"
              << "\t(2)  Request Provider Directory\n"
-             << "\t(3)  Exit"
+             << "\t(3)  Exit\n"
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
