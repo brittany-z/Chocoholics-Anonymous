@@ -37,11 +37,12 @@ class Data_center{
 class Terminal{
 
     public:
-        Terminal();
-        Terminal(const Data_center & link);
+        Terminal(Data_center & link);
         void provider_menu();
         void manager_menu();
-        void start_menu(); //This will call validate in Data_center
+        void start_menu();
+        void interactive_mode();
+        //int validate(const Data_center * link, string & ID_num);
     
     private:
         Data_center * data_link;
