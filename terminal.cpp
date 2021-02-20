@@ -68,21 +68,231 @@ void Data_center::add_service(){
 
 /* -------- TERMINAL CLASS METHODS -------- */
 
-Terminal::Terminal(){
-}
-
-
-Terminal::Terminal(const Data_center & link){
+Terminal::Terminal(Data_center & link){
+    data_link = &link;
 }
 
 
 void Terminal::provider_menu(){
+
+    // Clear screen
+    for(int i = 0; i < 100; ++i){
+        cout << "\n";
+    }
+    
+    cout << "Welcome to the Provider Menu.\n\n";
+    int choice = 0;
+
+    do{
+        cout << "Here are your options:\n\n"
+             << "\t(1)  Input a Service\n"
+             << "\t(2)  Request Provider Directory\n"
+             << "\t(3)  Exit\n"
+             << "Please enter the number corresponding to your selection: ";
+
+        cin >> choice;
+        cin.ignore(100, '\n');
+
+        for(int i = 0; i < 100; ++i){
+            cout << "\n";
+        }
+
+        if(choice >= 1 && choice <= 2){
+            switch(choice){
+                case 1:
+                    data_link->add_service();
+                    break;
+                case 2:
+                    data_link->disp_map(3);
+                    break;
+            }
+        }
+
+        else if(choice != 3){
+            cout << "Error: Invalid selection. Please try again.\n\n";
+        }
+
+    }while(choice != 3);
+    
+    return;
 }
 
 
 void Terminal::manager_menu(){
+
+    // Clear screen
+    for(int i = 0; i < 100; ++i){
+        cout << "\n";
+    }
+    
+    cout << "Welcome to the Manager Menu.\n\n";
+    int choice = 0;
+
+    do{
+        cout << "Here are your options:\n\n"
+             << "\t(1)  Run Member Report\n"
+             << "\t(2)  Run Provider Report\n"
+             << "\t(3)  Run Summary Report\n"
+             << "\t(4)  Pull EFT Data\n"
+             << "\t(5)  Run Interactive Mode\n"
+             << "\t(6)  Exit\n\n"
+             << "Please enter the number corresponding to your selection: ";
+
+        cin >> choice;
+        cin.ignore(100, '\n');
+
+        for(int i = 0; i < 100; ++i){
+            cout << "\n";
+        }
+
+        if(choice >= 1 && choice <= 5){
+            switch(choice){
+                case 1:
+                    data_link->person_report(); 
+                    break;
+                case 2:
+                    data_link->person_report();
+                    break;
+                case 3:
+                    data_link->sum_report();
+                    break;
+                case 4:
+                    data_link->pull_EFT();
+                    break;
+                case 5:
+                    interactive_mode();
+                    break;
+            }
+        }
+
+        else if(choice != 6){
+            cout << "Error: Invalid selection. Please try again.\n\n";
+        }
+
+    }while(choice != 6);
+    
+    return;
+}
+
+
+void Terminal::interactive_mode(){
+
+    // Clear screen
+    for(int i = 0; i < 100; ++i){
+        cout << "\n";
+    }
+    
+    cout << "Welcome to Interactive Mode.\n\n";
+    int choice = 0;
+
+    do{
+        cout << "Here are your options:\n\n"
+             << "\t(1)  Add a new Provider or Member\n"
+             << "\t(2)  Remove an existing Provider or Member\n"
+             << "\t(3)  Update existing Provider or Member records\n"
+             << "\t(4)  Exit\n\n"
+             << "Please enter the number corresponding to your selection: ";
+
+        cin >> choice;
+        cin.ignore(100, '\n');
+
+        for(int i = 0; i < 100; ++i){
+            cout << "\n";
+        }
+
+        if(choice >= 1 && choice <= 3){
+            switch(choice){
+                case 1:
+                    data_link->add_person();
+                    break;
+                case 2:
+                    data_link->remove();
+                    break;
+                case 3:
+                    data_link->update();
+                    break;
+            }
+        }
+
+        else if(choice != 4){
+            cout << "Error: Invalid selection. Please try again.\n\n";
+        }
+
+    }while(choice != 4);
+    
+    return;
 }
 
 
 void Terminal::start_menu(){
+
+    // Clear screen
+    for(int i = 0; i < 100; ++i){
+        cout << "\n";
+    }
+
+    cout << "Welcome to the Chocoholics Anonymous terminal.\n\n";
+
+    string ID_num(read_num(1));
+    char first_num = ID_num[0];
+    bool set = 0;
+   
+    // Checking if the user is not a Provider nor a Manager.
+    if(first_num != '2' && first_num != '3'){
+        for(int i = 0; i < 100; ++i){
+            cout << "\n";
+        }
+
+        cout << "You do not have permission to access this terminal.\n"
+             << "Terminal booting down.\n\n";
+
+        return;
+    }
+
+    //validate(data_link, ID_num);
+
+    if(data_link->check_valid(ID_num, set) < 0){
+        // More to do here, depends on what messages/options
+        // check_valid provides on the Data_center side.
+        return;
+    }
+
+    if(first_num == '3'){ // Manager
+        manager_menu();
+    }
+
+    else{
+        provider_menu();
+    }
+
+
+    return;
 }
+
+/* Some stuff written in case Data_center doesn't handle the error messages.
+int Terminal::validate(const Data_center * link, string & ID_num){
+
+    bool set = 0;
+    int valid = link->check_valid(ID_num, set); // returns 0 for valid, -1 for invalid
+    char response;
+
+    while(valid == -1){
+        cout << "Error: Invalid user ID number.\n"
+             << "The user ID number entered was not found in the ChocAn Data Center.\n"
+             << "Would you like to try again? (Y/N): ";
+        cin >> response;
+        cin.ignore(100, '\n');
+        response = toupper(response);
+
+        if(response == 'N'){
+          return 0;
+        }
+
+        ID_num = read_num(1);
+
+        valid = link->check_valid(ID_num, set);
+    }
+
+    return 1;
+}
+*/

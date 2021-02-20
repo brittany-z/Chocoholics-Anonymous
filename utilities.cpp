@@ -116,7 +116,7 @@ string read_num(int type)
     {
         if (type == 1)
         {
-            cout << "\nPlease enter user number: ";
+            cout << "\nPlease enter your unique user ID number: ";
             max = ID_MAX;
         }
         else if (type == 2)
