@@ -1,4 +1,4 @@
-/*#include "terminal.h"
+#include "terminal.h"
 #include <iostream>
 using namespace std;
 
@@ -42,7 +42,7 @@ int main(){
     p.add_service(p_serv2);
 
     cout << "\nPROVIDER SERVICE INFO AND SERVICE LIST\n";
-    p.display_all();*/
+    p.display_all();
     
     //###############################################################
 
@@ -96,7 +96,7 @@ int main(){
 
     //###############################################################
 
-    /* Uncomment the following block to test the Terminal and Data_center
+     Uncomment the following block to test the Terminal and Data_center
     class functionality. */
 
     Data_center testCenter;
@@ -106,4 +106,4 @@ int main(){
 
     return 0;
 }
-*/
+

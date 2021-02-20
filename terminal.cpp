@@ -55,8 +55,8 @@ void Data_center::sum_report(){
 }
 
 
-void Data_center::add_person(int type){
-
+void Data_center::add_person(){
+    int choice = -1;
     /* 1. Instantiate user, this will cause the ripple affect of
      * constructors that read
      *
@@ -68,41 +68,138 @@ void Data_center::add_person(int type){
      * 4. add person to map by list_name.insert(make_pair(obj.get_key(), obj));
      * or list_name.insert(make_pair(temp, obj)); where temp is the num returned
      * by gen_num*/
-    switch(type)
-    {
-      case 1:
-      {
-        Member new_member;
-        new_member.gen_num(type);
-        while(check_valid(new_member.get_key(), true) == 0)
-          new_member.gen_num(type);
-        member_list.insert(make_pair(new_member.get_key(), new_member));
-        break;
-      }
-      case 2:
-      {
-        Provider new_provider;
-        new_provider.gen_num(type);
-        while(check_valid(new_provider.get_key(), true) == 0)
-          new_provider.gen_num(type);
-        provider_list.insert(make_pair(new_provider.get_key(), new_provider));
-        break;
-      }
-      case 3:
-        break;
-      default:
-        break;
-    }
+    do{
+        cout << "Here are your options:\n\n"
+             << "\t(1)  Add a new Member\n"
+             << "\t(2)  Add a new Provider\n"
+             << "\t(3)  Exit\n\n"
+             << "Please enter the number corresponding to your selection: ";
+
+        cin >> choice;
+        cin.ignore(100, '\n');
+
+        for(int i = 0; i < 100; ++i){
+            cout << "\n";
+        }
+
+        switch(choice)
+        {
+          case 1:
+          {
+            Member new_member;
+            new_member.gen_num(choice);
+            while(check_valid(new_member.get_key(), true) == 0)
+              new_member.gen_num(choice);
+            member_list.insert(make_pair(new_member.get_key(), new_member));
+            break;
+          }
+          case 2:
+          {
+            Provider new_provider;
+            new_provider.gen_num(choice);
+            while(check_valid(new_provider.get_key(), true) == 0)
+              new_provider.gen_num(choice);
+            provider_list.insert(make_pair(new_provider.get_key(), new_provider));
+            break;
+          }
+          default:
+            cout << "Error: Invalid selection. Please try again.\n\n";
+            break;
+        }
+    }while(choice != 3);
 }
 
 
 void Data_center::remove(){
-
+    std::string input;
     //I think they have removal methods
+         
+        do{
+        cout << "Enter User ID of Member or Provider. (Press 'q' to quit)\n\n";
+        getline(cin, input, '\n');
+        cin.ignore(100, '\n');
+
+        for(int i = 0; i < 100; ++i){
+            cout << "\n";
+        }
+
+        switch(input[0])
+        {
+          case '1':
+          {
+            if(member_list.erase(input) == 0)
+              cout << "Error: Invalid ID. Please try again.\n\n";
+            else
+              cout << "Member with ID [" << input << "] erased.\n\n"; 
+            break;
+          }
+          case '2':
+          {
+            if(provider_list.erase(input) == 0)
+              cout << "Error: Invalid ID. Please try again.\n\n";
+            else
+              cout << "Provider with ID [" << input << "] erased.\n\n";
+            break;
+          }
+          case '3':
+            cout << "Cannot remove Managers.\n\n";
+            break;
+          case 'q':
+            //empty case for quitting
+            break;
+          default:
+            cout << "Error: Invalid selection. Please try again.\n\n";
+            break;
+        }
+    }while(input.compare("q") != 0);
+
 }
 
 
 void Data_center::update(){
+    std::string input;           
+        do{
+        cout << "Enter User ID of Member or Provider. (Press 'q' to quit)\n\n";
+        getline(cin, input, '\n');
+        cin.ignore(100, '\n');
+
+        for(int i = 0; i < 100; ++i){
+            cout << "\n";
+        }
+
+        switch(input[0])
+        {
+          case '1':
+          {
+            std::unordered_map<std::string, Member>::iterator temp;
+            temp = member_list.find(input);
+            if(temp != member_list.end())
+              temp->second.read();
+            else
+              cout << "Error: Invalid selection. Please try again.\n\n";
+            break;
+          }
+          case '2':
+          {
+            std::unordered_map<std::string, Provider>::iterator temp;
+            temp = provider_list.find(input);
+            if(temp != provider_list.end())
+              temp->second.read();
+            else
+              cout << "Error: Invalid selection. Please try again.\n\n";
+            break;
+          }
+          case '3':
+            cout << "Cannot modify Manager data.\n\n";
+            break;
+          case 'q':
+            //empty case for quitting
+            break;
+          default:
+            cout << "Error: Invalid selection. Please try again.\n\n";
+            break;
+        }
+    }while(input.compare("q") != 0);
 }
 
 
