@@ -94,6 +94,16 @@ int main(){
     m.display_all();
 
 
+    //###############################################################
+
+    /* Uncomment the following block to test the Terminal and Data_center
+    class functionality. */
+
+    Data_center testCenter;
+    Terminal testTerminal(testCenter);
+
+    testTerminal.start_menu();
+
     return 0;
 }
 */

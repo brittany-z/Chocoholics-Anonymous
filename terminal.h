@@ -22,7 +22,7 @@ class Data_center{
         void person_report();
         void pull_EFT();
         void sum_report();
-        void add_person(int type);
+        void add_person();
         void remove(); 
         void update();
         void add_service();
@@ -40,11 +40,12 @@ class Data_center{
 class Terminal{
 
     public:
-        Terminal();
-        Terminal(const Data_center & link);
+        Terminal(Data_center & link);
         void provider_menu();
         void manager_menu();
-        void start_menu(); //This will call validate in Data_center
+        void start_menu();
+        void interactive_mode();
+        //int validate(const Data_center * link, string & ID_num);
     
     private:
         Data_center * data_link;
