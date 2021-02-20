@@ -1,4 +1,4 @@
-#include "terminal.h"
+/*#include "terminal.h"
 #include <iostream>
 using namespace std;
 
@@ -10,7 +10,7 @@ int main(){
     //list (FYI cannot test both provider service list and member 
     //service list at the same time)
 
-    /*cout << "\n##TESTING PROVIDER SERVICE LIST##"
+    cout << "\n##TESTING PROVIDER SERVICE LIST##"
          << "\nYOU WILL ENTER ONE PROVIDER AND TWO MEMBERS."
          << "\nA SERVICE WILL BE ADDED TO THE LIST FOR EACH"
          << "\nMEMBER\n";
@@ -91,8 +91,9 @@ int main(){
     m.add_service(m_serv3);
 
     cout << "\nMEMBER SERVICE INFO AND SERVICE LIST\n";
-    m.display_all();*/
+    m.display_all();
 
 
     return 0;
 }
+*/
