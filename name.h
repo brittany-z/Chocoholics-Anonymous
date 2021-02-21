@@ -1,3 +1,7 @@
+#ifndef NAME_H
+#define NAME_H
+
+#include <fstream>
 #include "utilities.h"
 
 
@@ -31,3 +35,4 @@ class Name{
         std::string a_name;
         std::string ID_num;
 };
+#endif

@@ -1,3 +1,5 @@
+#ifndef SERVICES_H
+#define SERVICES_H
 #include "name.h"
 
 
@@ -81,3 +83,4 @@ class Member_service: public Serv_date{
     private:
         std::string prov_name;
 };
+#endif

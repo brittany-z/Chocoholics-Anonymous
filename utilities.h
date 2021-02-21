@@ -1,3 +1,5 @@
+#ifndef UTILITIES_H
+#define UTILITIES_H
 #include <string>
 #include <fstream>
 // Put your handy dandy utility function prototypes here.
@@ -19,3 +21,4 @@ std::string get_curr_date();
 //Writes the current date end time for the service file
 void write_curr_DT(std::ofstream & out);
 
+#endif
