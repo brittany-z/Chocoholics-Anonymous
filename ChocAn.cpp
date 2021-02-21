@@ -10,7 +10,7 @@ int main(){
     //list (FYI cannot test both provider service list and member 
     //service list at the same time)
 
-    /*cout << "\n##TESTING PROVIDER SERVICE LIST##"
+    cout << "\n##TESTING PROVIDER SERVICE LIST##"
          << "\nYOU WILL ENTER ONE PROVIDER AND TWO MEMBERS."
          << "\nA SERVICE WILL BE ADDED TO THE LIST FOR EACH"
          << "\nMEMBER\n";
@@ -42,7 +42,7 @@ int main(){
     p.add_service(p_serv2);
 
     cout << "\nPROVIDER SERVICE INFO AND SERVICE LIST\n";
-    p.display_all();*/
+    p.display_all();
     
     //###############################################################
 
@@ -91,12 +91,12 @@ int main(){
     m.add_service(m_serv3);
 
     cout << "\nMEMBER SERVICE INFO AND SERVICE LIST\n";
-    m.display_all();*/
+    m.display_all();
 
 
     //###############################################################
 
-    /* Uncomment the following block to test the Terminal and Data_center
+     Uncomment the following block to test the Terminal and Data_center
     class functionality. */
 
     Data_center testCenter;
@@ -106,3 +106,4 @@ int main(){
 
     return 0;
 }
+
