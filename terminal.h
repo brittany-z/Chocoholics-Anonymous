@@ -9,6 +9,8 @@ class Data_center{
 
     public:
         Data_center();
+        ~Data_center();
+        void read_dir();
         void write_file();
         //set is a flag to know if we need to set the pointers and permissions
         //or not, I was thinking about maybe using this method as a search as

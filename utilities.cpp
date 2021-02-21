@@ -136,3 +136,64 @@ string read_num(int type)
     return temp;
 }
 
+
+/*Returns a string of the current date in the
+ * appropriate format.*/
+string get_curr_date()
+{
+    //Get current time
+    time_t now = time(0);
+    //Point to tm_struct in object
+    tm * curr = localtime(&now);
+    
+    string temp;
+    if (curr->tm_mon + 1 < 10)
+        temp = "0" + to_string(curr->tm_mon + 1);
+    else
+       temp = to_string(curr->tm_mon + 1);
+    
+    if (curr->tm_mday < 10)
+        temp = temp + "-0" + to_string(curr->tm_mday);
+    else
+        temp = temp + "-" + to_string(curr->tm_mday);
+
+    return temp + "-" + to_string(curr->tm_year + 1900);
+}
+
+
+/*Writes the current date and time to file in
+ * the appropriate format.*/
+void write_curr_DT(ofstream & out){
+ 
+    //Get current time
+    time_t now = time(0);
+    //Point to tm_struct in object
+    tm * curr = localtime(&now);
+  
+    out << "\nCurrent date and time: ";
+    if (curr->tm_mon + 1 < 10)
+        out << "0" << curr->tm_mon + 1;
+    else
+        out << curr->tm_mon + 1;
+    
+    if (curr->tm_mday < 10)
+        out << "-0" << curr->tm_mday;
+    else
+        out << "-" << curr->tm_mday;
+
+    out << "-" << curr->tm_year + 1900 << " ";
+
+    if (curr->tm_hour < 10)
+        out << "0" << curr->tm_hour;
+    else
+        out << ":" << curr->tm_hour;
+    if (curr->tm_min + 1 < 0)
+        out << ":0" << curr->tm_min + 1;
+    else
+        out << ":" << curr->tm_min + 1;
+    if (curr->tm_sec < 10)
+        out << ":0" << curr->tm_sec;
+    else
+        out  << ":" << curr->tm_sec;
+}
+

@@ -1,4 +1,5 @@
 #include <string>
+#include <fstream>
 // Put your handy dandy utility function prototypes here.
 
 
@@ -13,4 +14,8 @@ bool equal_max(size_t str_len, size_t max);
 //Prompts and reads for a user number or a
 //service code depending on the int type
 std::string read_num(int type);
+/*Returns a string of the current date*/
+std::string get_curr_date();
+//Writes the current date end time for the service file
+void write_curr_DT(std::ofstream & out);
 

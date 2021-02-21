@@ -21,6 +21,7 @@ class Address: public Name{
         Address();
         Address(std::ifstream & in);
         void write_file(std::ofstream & out) const;
+        void write_report(std::ofstream & out) const;
         void display() const;
         void read();
         //For testing, calls Name display
@@ -39,7 +40,8 @@ class Provider: public Address{
     public:
         Provider();
         Provider(std::ifstream & in);
-        void write_file(std::ofstream & out) const;
+        void write_report(std::ofstream & out) const;
+        void write_rec_curr_DT(std::ofstream & out) const;
         void add_service(const Provider_service & to_add);
         //For testing. Displays all info in hierarchy.
         void display_all() const;
@@ -57,7 +59,7 @@ class Member: public Address{
         Member();
         Member(char first_num);
         Member(std::ifstream & in);
-        void write_file(std::ofstream & out) const;
+        void write_report(std::ofstream & out) const;
         void add_service(const Member_service & to_add);
         bool check_susp() const;
         //For testing. Displays all info in hierarchy.

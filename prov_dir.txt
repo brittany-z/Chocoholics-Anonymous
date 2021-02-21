@@ -1,0 +1,27 @@
+$
+Acupuncture|100.00|139819
+$
+Aerobics|75.00|143765
+$
+Art Therapy|50.00|177044
+$
+CBT Session|150.00|216806
+$
+DBT Session|150.00|276027
+$
+Exposure Therapy|90.00|352566
+$
+Group Therapy|65.00|487185
+$
+Hypnotherapy|75.00|525017
+$
+Life Coaching|80.00|691967
+$
+Mindfulness Training|65.00|769853
+$
+Nutrition Education|70.00|837946
+$
+Yoga|90.00|926680
+$
+Zumba|85.00|934831
+

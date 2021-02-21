@@ -6,34 +6,63 @@ using namespace std;
 /* -------- SERVICE CLASS METHODS -------- */
 
 
-//For testing
-Service::Service(){
-
-    code = "123456";
-    name = "Therapy";
-    cost = 150.00;
-}
+Service::Service(): fee(0){}
 
 
 /*Constructor that sets the data to what is read from
- * the file.*/
+ * the file. Used to reading the provider directory.*/
 Service::Service(ifstream & in){
+
+    getline(in, name, '|');
+    in >> fee;
+    in.ignore(100, '|');
+    getline(in, code);
 }
 
 
-/*Writes to file*/
-void Service::write_file(std::ofstream & out) const{
+/*Writes to file. Type 1 means that it only writes the
+ * name (member report). Any other type means that it
+ * only writes the code and fee (provider reports).*/
+void Service::write_report(ofstream & out, int type) const{
+
+    if (type == 1)
+        out << "\nService name: " << name << endl;
+    else
+        out << "\nService code: " << code
+            << "\nService fee: " << fee << endl;
 }
 
 
-/*Used for displaying the provider directory. But cost should
- * not be displayed.*/
+/*For testing*/
+void Service::test(){
+
+    code = "123456";
+    name = "Therapy";
+    fee = 150.00;
+}
+
+
+/*Used to display name for verification
+ * when adding a service.*/
+void Service::disp_name() const{
+
+    cout << endl << name << endl;
+}
+
+
+/*Used to display fee when adding a service*/
+void Service::disp_fee() const{
+
+    cout << "\nFee for this service: $" << fee << endl;
+}
+
+
+/*Used for displaying the provider directory.*/
 void Service::display() const{
 
     cout << "\nService: " << name
          << "\nCode: " << code;
-
-    cout << "\ncost: $" << cost << endl; //remove this eventually
+    cout << "\nFee: $" << fee  << endl;
 }
 
 
@@ -51,26 +80,21 @@ string Service::get_key() const{
  * method of the provider class. It will also be
  * called by the data_center class when generating
  * reports in order to produce certain fee totals.*/
-unsigned Service::get_cost() const{
+unsigned Service::get_fee() const{
 
-    return cost;
+    return fee;
 }
 
 
 /* -------- SERV_DATE CLASS METHODS -------- */
 
 
-/*Constructor that sets the data to what is read from
- * the file.*/
-Serv_date::Serv_date(ifstream & in): Service(in){
-}
-
-
-/*This constructor copies the Service object by sending it up tp
- * the copy constructor and it reads in the service date. It checks
- * for valid logical date responses and that a future date is not
- * provided.*/
-Serv_date::Serv_date(const Service & curr_ser): Service(curr_ser){
+/*This constructor reads in the service date. It checks for valid
+ * logical date responses and that a future date is not provided.
+ * It is used to get the date before a service is selected in the
+ * provider directory and before a Provider_service is made per
+ * the program description. It is copied into the Provider_service.*/
+Serv_date::Serv_date(){
 
     /*Get current time for range checking/that service date 
      * input is not in the future*/
@@ -150,8 +174,33 @@ Serv_date::Serv_date(const Service & curr_ser): Service(curr_ser){
 }
 
 
-/*Writes to file*/
-void Serv_date::write_file(ofstream & out) const{
+/*This constructor copies the Serv_date object that was
+ * used to add the service date prior to everything else.
+ * And it sends the service from the provider directory
+ * to be copied by the Service CC. It is used when creating
+ * a Provider_service.*/
+Serv_date::Serv_date(const Service & curr_serv, const Serv_date & date): 
+    Service(curr_serv), day(date.day), month(date.month), year(date.year){}
+
+
+/*Constructor that sets the data to what is read from
+ * the file.*/
+Serv_date::Serv_date(ifstream & in): Service(in){
+}
+
+
+/*Writes to the service date to file in the
+ * appropriate format.*/
+void Serv_date::write_report(ofstream & out) const{
+
+    out << "\nService date: ";
+    if (month < 10)
+        out << "0" << month;
+    if (day < 10)
+        out << "-0" << day;
+    else
+        out << "-" << day;
+    out << "-" << year;
 }
 
 
@@ -192,7 +241,8 @@ void Serv_date::display() const{
 }
 
 
-/*Checks if the service date is within the current week.*/
+/*Checks if the service date is within the current week.
+ * Returns true if it is and false if not.*/
 bool Serv_date::check_week() const{
 
     /*Get current date*/
@@ -227,12 +277,14 @@ Provider_service::Provider_service(ifstream & in): Serv_date(in){
 
 /*Constructor that is used to create a provider service.
  * It copies the service chosen by the provider from
- * the provider directory, and the name object in
- * the current member object (from the member map) that 
- * the service was provided to. It also prompts and
- * reads for comments.*/
-Provider_service::Provider_service(const Name & curr_mem, const Service & curr_ser): 
-    Serv_date(curr_ser), mem_info(curr_mem){
+ * the provider directory,the name object in the current 
+ * member object (from the member map) that the service 
+ * was provided to, and the service date. All by passing
+ * objects to constructors. It also prompts and reads 
+ * for comments.*/
+Provider_service::Provider_service(const Name & curr_mem, 
+        const Service & curr_ser, const Serv_date & date): 
+        Serv_date(curr_ser, date), mem_info(curr_mem){
     
     char response;
     do
@@ -260,8 +312,49 @@ Provider_service::Provider_service(const Name & curr_mem, const Service & curr_s
 }
 
 
-/*Writes to file*/
-void Provider_service::write_file(ofstream & out) const{
+/*Writes to file. Used for generating provider reports.*/
+void Provider_service::write_report(ofstream & out) const{
+
+    Serv_date::write_report(out);
+
+    tm * recv = localtime(&received);
+
+    out << "\nReceived date and time: ";
+    if (recv->tm_mon + 1 < 10)
+        out << "0" << recv->tm_mon + 1;
+    else
+        out << recv->tm_mon + 1;
+    
+    if (recv->tm_mday < 10)
+        out << "-0" << recv->tm_mday;
+    else
+        out << "-" << recv->tm_mday;
+
+    out << "-" << recv->tm_year + 1900 << " ";
+
+    if (recv->tm_hour < 10)
+        out << "0" << recv->tm_hour;
+    else
+        out << ":" << recv->tm_hour;
+    if (recv->tm_min + 1 < 0)
+        out << ":0" << recv->tm_min + 1;
+    else
+        out << ":" << recv->tm_min + 1;
+    if (recv->tm_sec < 10)
+        out << ":0" << recv->tm_sec << endl;
+    else
+        out  << ":" << recv->tm_sec << endl;
+
+    mem_info.write_report(out);
+    Service::write_report(out, 2);
+}
+
+
+/*Only writes to service disk*/
+void Provider_service::write_comm(ofstream & out) const{
+
+    if (!comments.empty())
+        out << "\nComments: " << comments << endl;
 }
 
 
@@ -300,8 +393,12 @@ Member_service::Member_service(const Name & curr_prov,
 }
 
 
-/*Writes to file*/
-void Member_service::write_file(ofstream & out) const{
+/*Writes to file. Used for generating member reports.*/
+void Member_service::write_report(ofstream & out) const{
+
+    Serv_date::write_report(out);
+    out << "\nProvider name: " << prov_name;
+    Service::write_report(out, 1);
 }
 
 

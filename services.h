@@ -14,16 +14,19 @@ const size_t COM_MAX = 100;
 class Service{
 
     public:
-        Service(); //For testing
+        Service(); 
         Service(std::ifstream & in);
-        void write_file(std::ofstream & out) const;
+        void write_report(std::ofstream & out, int type) const;
+        void test(); //for testing
+        void disp_name() const;
+        void disp_fee() const;
         void display() const;
         std::string get_key() const;
-        unsigned get_cost() const;
+        unsigned get_fee() const;
 
     protected:
         std::string name;
-        float cost;
+        float fee;
         std::string code;
 };
 
@@ -31,9 +34,11 @@ class Service{
 class Serv_date: public Service{
 
     public:
+        Serv_date();
+        Serv_date(const Service & curr_serv, const Serv_date & date); 
         Serv_date(std::ifstream & in);
         Serv_date(const Service & curr_ser);
-        void write_file(std::ofstream & out) const;
+        void write_report(std::ofstream & out) const;
         int compare_date(const Serv_date & curr_serv) const;
         void display() const;
         bool check_week() const;
@@ -52,8 +57,10 @@ class Provider_service: public Serv_date{
 
     public:
         Provider_service(std::ifstream & in);
-        Provider_service(const Name & curr_mem, const Service & curr_serv);
-        void write_file(std::ofstream & out) const;
+        Provider_service(const Name & curr_mem, const Service & curr_serv,
+                const Serv_date & date);;
+        void write_report(std::ofstream & out) const;
+        void write_comm(std::ofstream & out) const;
         void display_all() const; //For testing
 
     private:
@@ -68,7 +75,7 @@ class Member_service: public Serv_date{
     public:
         Member_service(std::ifstream & in);
         Member_service(const Name & curr_prov, const Provider_service & curr_serv);
-        void write_file(std::ofstream & out) const;
+        void write_report(std::ofstream & out) const;
         void display_all() const; //For testing
 
     private:
