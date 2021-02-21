@@ -17,17 +17,27 @@ int Data_center::check_valid(const string & input, bool set){
     switch(input[0])
     {
       case '1':
+      {
         if(member_list.find(input) == member_list.end())
           ret = -1;
+        else
+          if(set) *curr_member = member_list.find(input)->second;
         break;
+      }
       case '2':
+      {
         if(provider_list.find(input) == provider_list.end())
           ret = -1;
+        else
+          *curr_provider = provider_list.find(input)->second;
         break;
+      }
       case '3':
+      {
         if(manager_list.find(input) == manager_list.end())
           ret = -1;
         break;
+      }
       default:
         ret = -1;
         break;
