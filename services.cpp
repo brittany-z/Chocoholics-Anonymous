@@ -13,10 +13,19 @@ Service::Service(): fee(0){}
  * the file. Used to reading the provider directory.*/
 Service::Service(ifstream & in){
 
+    /*This extracts the delimiter
+     * from the stream. So no need
+     * to ignore.*/
     getline(in, name, '|');
     in >> fee;
     in.ignore(100, '|');
     getline(in, code);
+    /*This extracts the \n from the
+     * stream. So no need to ignore.
+     * Could have also used cin >>
+     * because the code doesn't have
+     * whitespace but I would have 
+     * had to ignore afterwards.*/
 }
 
 
@@ -33,7 +42,9 @@ void Service::write_report(ofstream & out, int type) const{
 }
 
 
-/*For testing*/
+/*For testing. Eventually DELETE
+ * When removing testing suite
+ * from main*/
 void Service::test(){
 
     code = "123456";

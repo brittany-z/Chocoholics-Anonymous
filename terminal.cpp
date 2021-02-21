@@ -5,7 +5,9 @@ using namespace std;
 
 /* -------- DATA_CENTER CLASS METHODS -------- */
 
-Data_center::Data_center(): curr_provider(NULL), curr_member(NULL), permissions('2') {}
+Data_center::Data_center(): curr_provider(NULL), curr_member(NULL){
+    read_dir();
+}
 
 
 Data_center::~Data_center(){
@@ -15,7 +17,14 @@ Data_center::~Data_center(){
 /*Reads provider directory*/
 void Data_center::read_dir(){
     
-    /*Holds flag used to primp the pump*/
+    /*Holds flag ($) used to primp the pump.
+     * I do this so that the read constructor
+     * can read the all of the real data. I 
+     * don't want this method to read any real 
+     * data. Basically I don't want to prime 
+     * the pump with real data so I use a flag
+     * that separates the object data to 
+     * be read. See text file for clarification.*/
     char flag;
 
     ifstream in;
@@ -30,7 +39,10 @@ void Data_center::read_dir(){
         {
             in.ignore(100, '\n');
 
+            /*Create temp to be added that invokes
+             * the constructor that reads the data*/
             Service to_add(in);
+            //Insert into map
             prov_dir.insert(make_pair(to_add.get_key(), to_add));
 
             /*Prime the pump*/
@@ -121,7 +133,7 @@ void Data_center::update(){
 
 /*This method adds a service to the people and writes
  * to "disk". It relies on the curr_provider and
- * curr_member pointers to be set.*/
+ * curr_member pointers to be set. As well as permissions.*/
 void Data_center::add_service(){
 
     if (permissions != '2')
@@ -160,8 +172,10 @@ void Data_center::add_service(){
 
     it->second.disp_fee();
 
+    /*Write to "disk"*/
     ofstream out;
-     
+    
+    /*The ios::app command appends to the file*/
     out.open("services.txt", ios::app);
 
     if (out)

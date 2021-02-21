@@ -19,7 +19,9 @@ class Service{
         Service(); 
         Service(std::ifstream & in);
         void write_report(std::ofstream & out, int type) const;
-        void test(); //for testing
+        /*For testing. Eventually DELETE when testing suite
+         * is removed from main.*/
+        void test();
         void disp_name() const;
         void disp_fee() const;
         void display() const;

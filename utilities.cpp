@@ -145,7 +145,9 @@ string get_curr_date()
     time_t now = time(0);
     //Point to tm_struct in object
     tm * curr = localtime(&now);
-    
+
+    /*Lots of crazy formatting and appending
+     * to create one string.*/
     string temp;
     if (curr->tm_mon + 1 < 10)
         temp = "0" + to_string(curr->tm_mon + 1);
@@ -169,7 +171,14 @@ void write_curr_DT(ofstream & out){
     time_t now = time(0);
     //Point to tm_struct in object
     tm * curr = localtime(&now);
-  
+ 
+    /*Lots of crazy formatting to write
+     * the time and date to file in the
+     * appropriate format. Tried to use
+     * get_curr_date for the date, but 
+     * for some reason it didn't work.
+     * So lots of similarly repeated
+     * code. Oh well.*/
     out << "\nCurrent date and time: ";
     if (curr->tm_mon + 1 < 10)
         out << "0" << curr->tm_mon + 1;
