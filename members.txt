@@ -21,5 +21,3 @@ Josephus Miller|100947287|8942 Wilshire Blvd|Los Angeles|CA|90005|1
 Abel White|119478390|801 SE Walnut St|Brock|NE|68320|1
 Jeffrey Clement|185739948|322 Cherry St|Mt Pleasant|MI|48858|1
 Elizabeth Doherty|184739482|189 W Hopson St|Bad Axe|MI|48413|0
-
-

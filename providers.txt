@@ -18,7 +18,3 @@ Desmond Burns|289109483|210 S Oneida St|Green Bay|WI|54303
 Kathy Lichtenstein|209589203|N Winooski Ave|Burlington|VT|05401
 Tim Schneider|239057910|898 E Hazel Dr|Phoenix|AZ|85042
 Matthew Hemmingway|228905782|2495 NW 2nd St|Bend|OR|97701
-
-
-
-
