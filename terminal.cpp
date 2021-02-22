@@ -16,15 +16,9 @@ Data_center::~Data_center(){
 
 /*Reads provider directory*/
 void Data_center::read_dir(){
-    
-    /*Holds flag ($) used to primp the pump.
-     * I do this so that the read constructor
-     * can read the all of the real data. I 
-     * don't want this method to read any real 
-     * data. Basically I don't want to prime 
-     * the pump with real data so I use a flag
-     * that separates the object data to 
-     * be read. See text file for clarification.*/
+   
+    /*Holds the | flag at the beginning of
+     * each line. Used to prime the pump.*/
     char flag;
 
     ifstream in;
@@ -37,8 +31,6 @@ void Data_center::read_dir(){
 
         while (in && !in.eof())
         {
-            in.ignore(100, '\n');
-
             /*Create temp to be added that invokes
              * the constructor that reads the data*/
             Service to_add(in);
@@ -55,36 +47,50 @@ void Data_center::read_dir(){
         cerr << "\nFile not found\n";
 }
 
+//Or a destructor can do this
 void Data_center::write_file(){
 }
 
 
 int Data_center::check_valid(const string & input, bool set){
-    int ret = 0;
+    int ret = 0; 
     switch(input[0])
     {
       case '1':
-      {
-        if(member_list.find(input) == member_list.end())
-          ret = -1;
-        else
-          if(set) *curr_member = member_list.find(input)->second;
-        break;
-      }
+        {
+          if(!member_list.empty())
+          {
+            if(member_list.find(input) == member_list.end())
+                ret = -1;
+            else
+                if(set) curr_member = &member_list.find(input)->second;
+          }
+          else
+              cout << "\nNo members stored\n";
+          break;
+        }
       case '2':
-      {
-        if(provider_list.find(input) == provider_list.end())
-          ret = -1;
-        else
-          *curr_provider = provider_list.find(input)->second;
-        break;
-      }
+        {
+          if(!provider_list.empty())
+          {
+            if(provider_list.find(input) == provider_list.end())
+                ret = -1;
+            else
+                curr_provider = &provider_list.find(input)->second;
+          }
+          else
+              cout << "\nNo providers stored\n";
+          break;
+        }
       case '3':
-      {
-        if(manager_list.find(input) == manager_list.end())
-          ret = -1;
-        break;
-      }
+        {
+          if(!manager_list.empty())
+            if(manager_list.find(input) == manager_list.end())
+                ret = -1;
+          else
+              cout << "\nNo managers stored\n";
+          break;
+        }
       default:
         ret = -1;
         break;
@@ -93,32 +99,52 @@ int Data_center::check_valid(const string & input, bool set){
 }
 
 
+/*This displays a map depending on the map_type. It only
+ * displays the name and number of the people maps
+ * because chris doesn't need to know more than that.*/
 void Data_center::disp_map(int map_type){
 
-    if (map_type == 1)
-        if(!member_list.empty())
-            for(auto it = member_list.begin(); it != member_list.end(); ++it)
-                it->second.Name::display();
-        else
-            cout << "\nMember list not found\n";
-    if (map_type == 2)
-        if(!provider_list.empty())
-            for(auto it = provider_list.begin(); it != provider_list.end(); ++it)
-                it->second.display_all();
-        else
-            cout << "\nProvider list not found\n";
-    if (map_type == 3)
-        if (!prov_dir.empty())
-            for(auto it = prov_dir.begin(); it != prov_dir.end(); ++it)
-                it->second.display();
-        else
-            cout << "\nProvider Directory not found\n";
-    if (map_type == 4)
-        if(!manager_list.empty())
-            for(auto it = manager_list.begin(); it != manager_list.end(); ++it)
-                cout << it->first << endl << it->second << endl;
-        else
-            cout << "\nManager list not found\n";
+    switch (map_type)
+    {
+        case 1:
+            {
+                if(!member_list.empty())
+                    for(auto it = member_list.begin(); it != member_list.end(); ++it)
+                        it->second.Name::display();
+                else
+                    cout << "\nNo members stored\n";
+                break;
+            }
+        case 2:
+            {
+                if(!provider_list.empty())
+                    for(auto it = provider_list.begin(); it != provider_list.end(); ++it)
+                        it->second.Name::display();
+                else
+                    cout << "\nNo providers stored\n";
+                break;
+            }
+        case 3:
+            {
+                if (!prov_dir.empty())
+                    for(auto it = prov_dir.begin(); it != prov_dir.end(); ++it)
+                        it->second.display();
+                else
+                    cout << "\nProvider Directory not found\n";
+                break;
+            }
+        case 4:
+            {
+                if(!manager_list.empty())
+                    for(auto it = manager_list.begin(); it != manager_list.end(); ++it)
+                        it->second.display();
+                else
+                    cout << "\nNo managers stored\n";
+                break;
+            }
+        default: cerr << "\nInvalid map type\n";
+            break;
+    }
 }
 
 
@@ -136,17 +162,6 @@ void Data_center::sum_report(){
 
 void Data_center::add_person(){
     int choice = -1;
-    /* 1. Instantiate user, this will cause the ripple affect of
-     * constructors that read
-     *
-     * 2 call gen_num to generate user number catch string in temp
-     *
-     * 3. in while loop, call check valid, once check valid indicates
-     * that the number is invalid (doesn't exist in map) then
-     *
-     * 4. add person to map by list_name.insert(make_pair(obj.get_key(), obj));
-     * or list_name.insert(make_pair(temp, obj)); where temp is the num returned
-     * by gen_num*/
     do{
         cout << "Here are your options:\n\n"
              << "\t(1)  Add a new Member\n"
@@ -164,23 +179,23 @@ void Data_center::add_person(){
         switch(choice)
         {
           case 1:
-          {
-            Member new_member;
-            new_member.gen_num(choice);
-            while(check_valid(new_member.get_key(), true) == 0)
-              new_member.gen_num(choice);
-            member_list.insert(make_pair(new_member.get_key(), new_member));
-            break;
-          }
+            {
+                Member new_member;
+                new_member.gen_num(choice);
+                while(member_list.count(new_member.get_key()))
+                  new_member.gen_num(choice);
+                member_list.insert(make_pair(new_member.get_key(), new_member));
+                break;
+            }
           case 2:
-          {
-            Provider new_provider;
-            new_provider.gen_num(choice);
-            while(check_valid(new_provider.get_key(), true) == 0)
-              new_provider.gen_num(choice);
-            provider_list.insert(make_pair(new_provider.get_key(), new_provider));
-            break;
-          }
+            {
+                Provider new_provider;
+                new_provider.gen_num(choice);
+                while(provider_list.count(new_provider.get_key()))
+                  new_provider.gen_num(choice);
+                provider_list.insert(make_pair(new_provider.get_key(), new_provider));
+                break;
+            }
           default:
             cout << "Error: Invalid selection. Please try again.\n\n";
             break;
@@ -190,108 +205,131 @@ void Data_center::add_person(){
 
 
 void Data_center::remove(){
-    std::string input;
-    //I think they have removal methods
+    string input;
          
-        do{
-        cout << "Enter User ID of Member or Provider. (Press 'q' to quit)\n\n";
-        getline(cin, input, '\n');
+    int choice = -1;
+    do{
+        cout << "Here are your options:\n\n"
+             << "\t(1)  Remove a Member\n"
+             << "\t(2)  Remove a Provider\n"
+             << "\t(3)  Exit\n\n"
+             << "Please enter the number corresponding to your selection: ";
+        cin >> choice;
         cin.ignore(100, '\n');
+
 
         for(int i = 0; i < 100; ++i){
             cout << "\n";
         }
 
-        switch(input[0])
+        input = read_num(3);
+
+        switch(choice)
         {
-          case '1':
-          {
-            if(member_list.erase(input) == 0)
-              cout << "Error: Invalid ID. Please try again.\n\n";
-            else
-              cout << "Member with ID [" << input << "] erased.\n\n"; 
-            break;
-          }
-          case '2':
-          {
-            if(provider_list.erase(input) == 0)
-              cout << "Error: Invalid ID. Please try again.\n\n";
-            else
-              cout << "Provider with ID [" << input << "] erased.\n\n";
-            break;
-          }
-          case '3':
-            cout << "Cannot remove Managers.\n\n";
-            break;
-          case 'q':
-            //empty case for quitting
+          case 1:
+            {
+                if (!member_list.empty())
+                {
+                    if(member_list.erase(input) == 0)
+                        cout << "Error: Invalid ID. Please try again.\n\n";
+                    else
+                        cout << "Member with ID [" << input << "] erased.\n\n"; 
+                }
+                else
+                    cout << "\nNo members stored\n";
+                break;
+            }
+          case 2:
+            {
+                if (!provider_list.empty())
+                {
+                    if(provider_list.erase(input) == 0)
+                  cout << "Error: Invalid ID. Please try again.\n\n";
+                else
+                  cout << "Provider with ID [" << input << "] erased.\n\n";
+                }
+                else
+                    cout << "\nNo providers found\n";
+                break;
+            }
+          case 3:
             break;
           default:
             cout << "Error: Invalid selection. Please try again.\n\n";
             break;
         }
-    }while(input.compare("q") != 0);
+    }while(choice < 1 || choice > 3);
 
 }
 
 
 void Data_center::update(){
-    std::string input;           
-        do{
-        cout << "Enter User ID of Member or Provider. (Press 'q' to quit)\n\n";
-        getline(cin, input, '\n');
+    string input;           
+    int choice = -1;
+
+    do{
+        cout << "Here are your options:\n\n"
+             << "\t(1)  Update a Member\n"
+             << "\t(2)  Update a Provider\n"
+             << "\t(3)  Exit\n\n"
+             << "Please enter the number corresponding to your selection: ";
+        cin >> choice;
         cin.ignore(100, '\n');
+
 
         for(int i = 0; i < 100; ++i){
             cout << "\n";
         }
 
-        switch(input[0])
+        input = read_num(3);
+
+        switch(choice)
         {
-          case '1':
-          {
-            std::unordered_map<std::string, Member>::iterator temp;
-            temp = member_list.find(input);
-            if(temp != member_list.end())
-              temp->second.read();
-            else
-              cout << "Error: Invalid selection. Please try again.\n\n";
-            break;
-          }
-          case '2':
-          {
-            std::unordered_map<std::string, Provider>::iterator temp;
-            temp = provider_list.find(input);
-            if(temp != provider_list.end())
-              temp->second.read();
-            else
-              cout << "Error: Invalid selection. Please try again.\n\n";
-            break;
-          }
-          case '3':
-            cout << "Cannot modify Manager data.\n\n";
-            break;
-          case 'q':
-            //empty case for quitting
+          case 1:
+            {
+                unordered_map<string, Member>::iterator temp;
+                if (!member_list.empty())
+                {
+                    temp = member_list.find(input);
+                    if(temp != member_list.end())
+                        temp->second.read();
+                    else
+                        cout << "Error: Invalid selection. Please try again.\n\n";
+                }
+                else
+                    cout << "\nNo members stored\n";
+                break;
+            }
+          case 2:
+            {
+                unordered_map<string, Provider>::iterator temp;
+                if (!provider_list.empty())
+                {
+                    temp = provider_list.find(input);
+                    if(temp != provider_list.end())
+                        temp->second.read();
+                    else
+                        cout << "Error: Invalid selection. Please try again.\n\n";
+                }
+                else
+                    cout << "\nNo providers stored\n";
+                break;
+            }
+          case 3:
             break;
           default:
             cout << "Error: Invalid selection. Please try again.\n\n";
             break;
         }
-    }while(input.compare("q") != 0);
+    }while(choice < 1 || choice > 3);
 }
 
 
 /*This method adds a service to the people and writes
  * to "disk". It relies on the curr_provider and
- * curr_member pointers to be set. As well as permissions.*/
+ * curr_member pointers to be set.*/
 void Data_center::add_service(){
 
-    if (permissions != '2')
-    {
-        cout << "\nNeed the appropriate permissions\n";
-        return;
-    }
     if (prov_dir.empty())
     {
         cout << "\nProvider Directory not found\n";

@@ -51,7 +51,7 @@ string Name::gen_num(char first_num){
  * changed depending on file formatting.*/
 void Name::write_file(ofstream & out) const{
 
-    out << a_name << '|'
+    out << '|' << a_name << '|'
         << ID_num << '|';
 }
 

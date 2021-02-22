@@ -25,7 +25,7 @@ Service::Service(ifstream & in){
      * Could have also used cin >>
      * because the code doesn't have
      * whitespace but I would have 
-     * had to ignore afterwards.*/
+     * had to ignore afterward.*/
 }
 
 

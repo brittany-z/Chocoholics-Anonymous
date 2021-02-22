@@ -107,16 +107,20 @@ bool equal_max(size_t str_len, size_t max)
  * It takes an identifying int that is used to indicate which
  * type of data we are reading. 1 for a user number and 2 
  * for a service code. It returns a copy of the string that 
- * was read in.*/
+ * was read in. Type 3 is for general entering of ID number 
+ * (updating removing).*/
 string read_num(int type)
 {
     size_t max = 0;
     string temp;
     do
     {
-        if (type == 1)
+        if (type == 1 || type == 3)
         {
-            cout << "\nPlease enter your unique user ID number: ";
+            if (type == 1)
+                cout << "\nPlease enter your unique user ID number: ";
+            else
+                cout << "\nPlease enter the ID number: ";
             max = ID_MAX;
         }
         else if (type == 2)
