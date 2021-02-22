@@ -24,6 +24,7 @@ class Name{
         std::string gen_num(char first_num);
         //Writes to file
         void write_file(std::ofstream & out) const;
+        void write_report(std::ofstream & out) const;
         void display() const; 
         //Gets key (ID_num) for map operations
         std::string get_key() const;

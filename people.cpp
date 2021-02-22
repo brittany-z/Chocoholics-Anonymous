@@ -21,8 +21,26 @@ Address::Address(ifstream & in): Name(in){
 }
 
 
-/*Writes to file*/
+/*Writes to file. This will probably need to be
+ * changed depending on file formatting.*/
 void Address::write_file(ofstream & out) const{
+
+    Name::write_file(out);
+    out << street << '|'
+        << city << '|'
+        << state << '|'
+        << zip << endl;
+}
+
+
+/*Writes to report*/
+void Address::write_report(ofstream & out) const{
+
+    Name::write_report(out);
+    out << "\nStreet: " << street
+        << "\nCity: " << city
+        << "\nState: " << state
+        << "\nZip: " << zip << endl;
 }
 
 
@@ -103,13 +121,25 @@ Provider::Provider(): num_consults(0), total_fees(0){
 /*Constructor that sets the data to what is read from
  * the file.*/
 Provider::Provider(ifstream & in): Address(in){
+
 }
 
 
-/*Writes to file.*/
-void Provider::write_file(ofstream & out) const{
+/*Writes to file for generating a report.*/
+void Provider::write_report(ofstream & out) const{
+    
+    Address::write_report(out);
+    if (!serv_list.empty())
+    {
+        out << "\nSERVICES:\n";
+        for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
+            it->write_report(out);
+        out << "\nTotal number of consulations this week: " << num_consults;
+        out << "\nTotal fees to be paid for the week: $" << total_fees;
+    }
+    else
+        out << "\nNo services provided this week\n";
 }
-
 
 
 /*This method adds a service to the provider's list of services.
@@ -127,7 +157,7 @@ void Provider::add_service(const Provider_service & to_add){
      * occurred within the current week.*/
     if (to_add.check_week()) //Serv_date method
     {
-        total_fees += to_add.get_cost(); //Service method
+        total_fees += to_add.get_fee(); //Service method
         ++num_consults;
     }
 }
@@ -169,8 +199,19 @@ Member::Member(ifstream & in): Address(in){
 }
 
 
-/*Writes to file*/
-void Member::write_file(ofstream & out) const{
+/*Writes to file for generating a report.*/
+void Member::write_report(ofstream & out) const{
+
+    Address::write_report(out);
+    if (!serv_list.empty())
+    {
+        out << "\nSERVICES:\n";
+        for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
+            if (it->check_week())
+                it->write_report(out);
+    }
+    else
+        out << "\nNo services provided this week\n";
 }
 
 
