@@ -459,9 +459,6 @@ Terminal::Terminal(Data_center & link){
 }
 
 
-/*Need to call check valid for member ID for adding service
- * (where set is true) per assignment description. Add service 
- * will not work without this.*/
 void Terminal::provider_menu(){
 
     // Clear screen
@@ -616,7 +613,6 @@ void Terminal::interactive_mode(){
 }
 
 
-/*Need member check-in option per assignment description*/
 void Terminal::start_menu(){
 
     // Clear screen
