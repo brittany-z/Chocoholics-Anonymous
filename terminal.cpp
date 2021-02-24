@@ -6,10 +6,9 @@ using namespace std;
 /* -------- DATA_CENTER CLASS METHODS -------- */
 
 Data_center::Data_center(): curr_provider(NULL), curr_member(NULL){
-    read_file(1);
-    read_file(2);
-    read_file(3);
-    read_file(4);
+    
+    for (int i = 1; i < 5; ++i)
+        read_file(i);
 }
 
 
@@ -23,15 +22,14 @@ void Data_center::read_file(int type){
     /*Holds the | flag at the beginning of
      * each line. Used to prime the pump.*/
     char flag;
-
     ifstream in;
     if (type == 1)
-        in.open("prov_dir.txt");
+        in.open("members.txt");
     else if (type == 2)
         in.open("providers.txt");
     else if (type == 3)
-        in.open("members.txt");
-    else if (type == 4)
+        in.open("prov_dir.txt");
+    else
         in.open("managers.txt");
 
     if (in.is_open())
@@ -45,11 +43,10 @@ void Data_center::read_file(int type){
             {
                 /*Create temp to be added that invokes
                 * the constructor that reads the data*/
-                Service to_add(in);
+                Member to_add(in);
                 //Insert into map
-                prov_dir.insert(make_pair(to_add.get_key(), to_add));
+                member_list.insert(make_pair(to_add.get_key(), to_add));
             }
-
             else if (type == 2)
             {
                 /*Create temp to be added that invokes
@@ -58,16 +55,15 @@ void Data_center::read_file(int type){
                 //Insert into map
                 provider_list.insert(make_pair(to_add.get_key(), to_add));
             }
-
-            if (type == 3)
+            else if (type == 3)
             {
                 /*Create temp to be added that invokes
                 * the constructor that reads the data*/
-                Member to_add(in);
+                Service to_add(in);
                 //Insert into map
-                member_list.insert(make_pair(to_add.get_key(), to_add));
+                prov_dir.insert(make_pair(to_add.get_key(), to_add));
             }
-            else if (type == 4)
+            else
             {
                 /*Create temp to be added that invokes
                 * the constructor that reads the data*/
@@ -76,7 +72,6 @@ void Data_center::read_file(int type){
                 manager_list.insert(make_pair(to_add.get_key(), to_add));
             }
             in.ignore(100, '\n');
-                
             /*Prime the pump*/
             in >> flag;
         }
@@ -93,18 +88,26 @@ void Data_center::write_file(){
 }
 
 
+/*Returns 0 for valid, -1 for invalid, -2 for suspended*/
 int Data_center::check_valid(const string & input, bool set){
-    int ret = 0; 
+    int ret = 0;
     switch(input[0])
     {
       case '1':
         {
           if(!member_list.empty())
           {
-            if(member_list.find(input) == member_list.end())
-                ret = -1;
+            unordered_map<string, Member>::iterator it;
+            it = member_list.find(input);
+            if (it == member_list.end())
+                ret = -1; //Invalid
             else
-                if(set) curr_member = &member_list.find(input)->second;
+            {
+                if (it->second.check_susp())
+                    return -2;//Valid but suspended
+                if(set) 
+                    curr_member = &(it->second);
+            }
           }
           else
               cout << "\nNo members stored\n";
@@ -114,10 +117,12 @@ int Data_center::check_valid(const string & input, bool set){
         {
           if(!provider_list.empty())
           {
-            if(provider_list.find(input) == provider_list.end())
-                ret = -1;
+            unordered_map<string, Provider>::iterator it;
+            it = provider_list.find(input);
+            if(it == provider_list.end())
+                ret = -1; //Invalid
             else
-                curr_provider = &provider_list.find(input)->second;
+                curr_provider = &(it->second);
           }
           else
               cout << "\nNo providers stored\n";
@@ -126,8 +131,10 @@ int Data_center::check_valid(const string & input, bool set){
       case '3':
         {
           if(!manager_list.empty())
-            if(manager_list.find(input) == manager_list.end())
-                ret = -1;
+          {
+            if(!manager_list.count(input))
+                ret = -1; //Invalid
+          }
           else
               cout << "\nNo managers stored\n";
           break;
@@ -278,7 +285,7 @@ void Data_center::remove(){
             {
                 if (!member_list.empty())
                 {
-                    if(member_list.erase(input) == 0)
+                    if(!member_list.erase(input))
                         cout << "Error: Invalid ID. Please try again.\n\n";
                     else
                         cout << "Member with ID [" << input << "] erased.\n\n"; 
@@ -291,10 +298,10 @@ void Data_center::remove(){
             {
                 if (!provider_list.empty())
                 {
-                    if(provider_list.erase(input) == 0)
-                  cout << "Error: Invalid ID. Please try again.\n\n";
-                else
-                  cout << "Provider with ID [" << input << "] erased.\n\n";
+                    if(!provider_list.erase(input))
+                        cout << "Error: Invalid ID. Please try again.\n\n";
+                    else
+                        cout << "Provider with ID [" << input << "] erased.\n\n";
                 }
                 else
                     cout << "\nNo providers found\n";
@@ -395,7 +402,7 @@ void Data_center::add_service(){
 
     if (prov_dir.empty())
     {
-        cout << "\nProvider Directory not found\n";
+        cerr << "\nProvider Directory not found\n";
         return;
     }
 
@@ -430,7 +437,7 @@ void Data_center::add_service(){
     /*The ios::app command appends to the file*/
     out.open("services.txt", ios::app);
 
-    if (out)
+    if (out.is_open())
     {
         write_curr_DT(out);
         p_serv.Serv_date::write_report(out);
@@ -452,6 +459,9 @@ Terminal::Terminal(Data_center & link){
 }
 
 
+/*Need to call check valid for member ID for adding service
+ * (where set is true) per assignment description. Add service 
+ * will not work without this.*/
 void Terminal::provider_menu(){
 
     // Clear screen
@@ -606,6 +616,7 @@ void Terminal::interactive_mode(){
 }
 
 
+/*Need member check-in option per assignment description*/
 void Terminal::start_menu(){
 
     // Clear screen

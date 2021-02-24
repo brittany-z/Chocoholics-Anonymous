@@ -61,6 +61,7 @@ class Member: public Address{
         Member();
         Member(char first_num);
         Member(std::ifstream & in);
+        void write_file(std::ofstream & out) const;
         void write_report(std::ofstream & out) const;
         void add_service(const Member_service & to_add);
         bool check_susp() const;

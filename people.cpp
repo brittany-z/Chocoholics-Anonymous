@@ -34,7 +34,7 @@ void Address::write_file(ofstream & out) const{
     out << street << '|'
         << city << '|'
         << state << '|'
-        << zip << endl;
+        << zip << '|';
 }
 
 
@@ -202,15 +202,20 @@ Member::Member(): suspended(false){
  * the file.*/
 Member::Member(ifstream & in): Address(in){
 
-    /*int temp;
-    in >> temp;
-    if (temp)
-        suspended = true;
-    else
-        suspended = false;*/
     in >> suspended;
     in.ignore(100, '|');
 }
+
+
+void Member::write_file(ofstream & out) const{
+    
+    Address::write_file(out);
+    if(suspended)
+        out << "1" << '|';
+    else
+        out << "0" << '|';
+}
+
 
 
 /*Writes to file for generating a report.*/
@@ -287,7 +292,7 @@ void Member::display_all() const{
         cout << "\nThis member has not received any services\n";
 
     if (suspended)
-        cout << "\nMember is NOT suspended\n";
+        cout << "\nMember is suspended\n";
     else
-        cout << "\nMember IS suspended\n";
+        cout << "\nMember NOT suspended\n";
 }
