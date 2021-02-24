@@ -9,8 +9,9 @@
  * size_t because that is what 
  * the string methods that
  * check length return.*/
-const size_t NAME_MAX = 25;
 const size_t NUM_MAX = 9;
+const size_t N_MAX = 25;
+
 
 
 class Name{

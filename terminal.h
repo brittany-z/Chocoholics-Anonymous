@@ -13,7 +13,7 @@ class Data_center{
     public:
         Data_center();
         ~Data_center();
-        void read_dir();
+        void read_file(int type);
         void write_file();
         int check_valid(const std::string & input, bool set); 
         void disp_map(int map_type);

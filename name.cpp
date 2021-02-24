@@ -16,13 +16,17 @@ Name::Name(){
         getline(cin, a_name);
         cout << "\nYou entered: " << a_name << endl;
     }while (a_name.empty() || exceed_max(a_name.length(), 
-                NAME_MAX) || !is_correct());
+                N_MAX) || !is_correct());
 }
 
 
 /*Constructor that sets the data to what is read from
  * the file.*/
 Name::Name(ifstream & in){
+
+    getline(in, a_name, '|');
+    getline(in, ID_num, '|');
+
 }
 
 

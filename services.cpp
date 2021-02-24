@@ -19,13 +19,7 @@ Service::Service(ifstream & in){
     getline(in, name, '|');
     in >> fee;
     in.ignore(100, '|');
-    getline(in, code);
-    /*This extracts the \n from the
-     * stream. So no need to ignore.
-     * Could have also used cin >>
-     * because the code doesn't have
-     * whitespace but I would have 
-     * had to ignore afterward.*/
+    getline(in, code, '|');
 }
 
 

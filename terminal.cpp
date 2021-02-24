@@ -6,7 +6,10 @@ using namespace std;
 /* -------- DATA_CENTER CLASS METHODS -------- */
 
 Data_center::Data_center(): curr_provider(NULL), curr_member(NULL){
-    read_dir();
+    read_file(1);
+    read_file(2);
+    read_file(3);
+    read_file(4);
 }
 
 
@@ -14,29 +17,66 @@ Data_center::~Data_center(){
 }
 
 
-/*Reads provider directory*/
-void Data_center::read_dir(){
+/*Reads in any map from the txt file.*/
+void Data_center::read_file(int type){
    
     /*Holds the | flag at the beginning of
      * each line. Used to prime the pump.*/
     char flag;
 
     ifstream in;
-    in.open("prov_dir.txt");
+    if (type == 1)
+        in.open("prov_dir.txt");
+    else if (type == 2)
+        in.open("providers.txt");
+    else if (type == 3)
+        in.open("members.txt");
+    else if (type == 4)
+        in.open("managers.txt");
 
-    if (in)
+    if (in.is_open())
     {
         /*Prine the pump*/
         in >> flag;
 
         while (in && !in.eof())
         {
-            /*Create temp to be added that invokes
-             * the constructor that reads the data*/
-            Service to_add(in);
-            //Insert into map
-            prov_dir.insert(make_pair(to_add.get_key(), to_add));
+            if (type == 1)
+            {
+                /*Create temp to be added that invokes
+                * the constructor that reads the data*/
+                Service to_add(in);
+                //Insert into map
+                prov_dir.insert(make_pair(to_add.get_key(), to_add));
+            }
 
+            else if (type == 2)
+            {
+                /*Create temp to be added that invokes
+                * the constructor that reads the data*/
+                Provider to_add(in);
+                //Insert into map
+                provider_list.insert(make_pair(to_add.get_key(), to_add));
+            }
+
+            if (type == 3)
+            {
+                /*Create temp to be added that invokes
+                * the constructor that reads the data*/
+                Member to_add(in);
+                //Insert into map
+                member_list.insert(make_pair(to_add.get_key(), to_add));
+            }
+            else if (type == 4)
+            {
+                /*Create temp to be added that invokes
+                * the constructor that reads the data*/
+                Name to_add(in);
+                //Insert into map
+                manager_list.insert(make_pair(to_add.get_key(), to_add));
+            }
+            in.ignore(100, '\n');
+                
             /*Prime the pump*/
             in >> flag;
         }
@@ -46,6 +86,7 @@ void Data_center::read_dir(){
     else
         cerr << "\nFile not found\n";
 }
+
 
 //Or a destructor can do this
 void Data_center::write_file(){
@@ -170,6 +211,7 @@ void Data_center::add_person(){
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
+        cin.clear();
         cin.ignore(100, '\n');
 
         for(int i = 0; i < 100; ++i){
@@ -196,11 +238,13 @@ void Data_center::add_person(){
                 provider_list.insert(make_pair(new_provider.get_key(), new_provider));
                 break;
             }
+          case 3:
+            break;
           default:
             cout << "Error: Invalid selection. Please try again.\n\n";
             break;
         }
-    }while(choice != 3);
+    }while(choice < 1 || choice > 3);
 }
 
 
@@ -212,9 +256,12 @@ void Data_center::remove(){
         cout << "Here are your options:\n\n"
              << "\t(1)  Remove a Member\n"
              << "\t(2)  Remove a Provider\n"
-             << "\t(3)  Exit\n\n"
+             << "\t(3)  Display Members\n"
+             << "\t(4)  Display providers\n"
+             << "\t(5)  Exit\n\n"
              << "Please enter the number corresponding to your selection: ";
         cin >> choice;
+        cin.clear();
         cin.ignore(100, '\n');
 
 
@@ -222,7 +269,8 @@ void Data_center::remove(){
             cout << "\n";
         }
 
-        input = read_num(3);
+        if (choice == 1 || choice == 2)
+            input = read_num(3);
 
         switch(choice)
         {
@@ -253,12 +301,18 @@ void Data_center::remove(){
                 break;
             }
           case 3:
+            disp_map(1);
+            break;
+          case 4:
+            disp_map(2);
+            break;
+          case 5:
             break;
           default:
             cout << "Error: Invalid selection. Please try again.\n\n";
             break;
         }
-    }while(choice < 1 || choice > 3);
+    }while(choice != 5);
 
 }
 
@@ -271,17 +325,20 @@ void Data_center::update(){
         cout << "Here are your options:\n\n"
              << "\t(1)  Update a Member\n"
              << "\t(2)  Update a Provider\n"
-             << "\t(3)  Exit\n\n"
+             << "\t(3)  Display members\n"
+             << "\t(4)  Display providers\n"
+             << "\t(5)  Exit\n\n"
              << "Please enter the number corresponding to your selection: ";
         cin >> choice;
+        cin.clear();
         cin.ignore(100, '\n');
 
 
         for(int i = 0; i < 100; ++i){
             cout << "\n";
         }
-
-        input = read_num(3);
+        if (choice == 1 || choice == 2)
+            input = read_num(3);
 
         switch(choice)
         {
@@ -316,12 +373,18 @@ void Data_center::update(){
                 break;
             }
           case 3:
+            disp_map(1);
+            break;
+          case 4:
+            disp_map(2);
+            break;
+          case 5:
             break;
           default:
             cout << "Error: Invalid selection. Please try again.\n\n";
             break;
         }
-    }while(choice < 1 || choice > 3);
+    }while(choice != 5);
 }
 
 
@@ -407,6 +470,7 @@ void Terminal::provider_menu(){
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
+        cin.clear();
         cin.ignore(100, '\n');
 
         for(int i = 0; i < 100; ++i){
@@ -455,6 +519,7 @@ void Terminal::manager_menu(){
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
+        cin.clear();
         cin.ignore(100, '\n');
 
         for(int i = 0; i < 100; ++i){
@@ -510,6 +575,7 @@ void Terminal::interactive_mode(){
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
+        cin.clear();
         cin.ignore(100, '\n');
 
         for(int i = 0; i < 100; ++i){
