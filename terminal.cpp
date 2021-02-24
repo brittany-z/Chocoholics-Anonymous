@@ -104,7 +104,7 @@ int Data_center::check_valid(const string & input, bool set){
             else
             {
                 if (it->second.check_susp())
-                    return -2;//Valid but suspended
+                    ret = -2;//Valid but suspended
                 if(set) 
                     curr_member = &(it->second);
             }
