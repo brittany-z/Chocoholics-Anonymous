@@ -18,6 +18,11 @@ Address::Address(){
 /*Constructor that sets the data to what is read from
  * the file.*/
 Address::Address(ifstream & in): Name(in){
+
+    getline(in, street, '|');
+    getline(in, city, '|');
+    getline(in, state, '|');
+    getline(in, zip, '|');
 }
 
 
@@ -29,7 +34,7 @@ void Address::write_file(ofstream & out) const{
     out << street << '|'
         << city << '|'
         << state << '|'
-        << zip << endl;
+        << zip << '|';
 }
 
 
@@ -120,7 +125,7 @@ Provider::Provider(): num_consults(0), total_fees(0){
 
 /*Constructor that sets the data to what is read from
  * the file.*/
-Provider::Provider(ifstream & in): Address(in){
+Provider::Provider(ifstream & in): Address(in), num_consults(0), total_fees(0){
 
 }
 
@@ -196,7 +201,21 @@ Member::Member(): suspended(false){
 /*Constructor that set the data to what is read from
  * the file.*/
 Member::Member(ifstream & in): Address(in){
+
+    in >> suspended;
+    in.ignore(100, '|');
 }
+
+
+void Member::write_file(ofstream & out) const{
+    
+    Address::write_file(out);
+    if(suspended)
+        out << "1" << '|';
+    else
+        out << "0" << '|';
+}
+
 
 
 /*Writes to file for generating a report.*/
@@ -271,4 +290,9 @@ void Member::display_all() const{
     }
     else
         cout << "\nThis member has not received any services\n";
+
+    if (suspended)
+        cout << "\nMember is suspended\n";
+    else
+        cout << "\nMember NOT suspended\n";
 }
