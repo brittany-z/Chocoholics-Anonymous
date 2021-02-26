@@ -5,91 +5,121 @@ using namespace std;
 
 /* -------- DATA_CENTER CLASS METHODS -------- */
 
-Data_center::Data_center(): curr_provider(NULL), curr_member(NULL){
-    
-    for (int i = 1; i < 5; ++i)
-        read_file(i);
-}
+Data_center::Data_center(): curr_provider(NULL), curr_member(NULL){}
 
 
 Data_center::~Data_center(){
 }
 
 
-/*Reads in any map from the txt file.*/
-void Data_center::read_file(int type){
+/*Reads all maps from the txt file. It returns 0 if
+ * the reading or map creation failed, otherwise
+ * it returns 1.*/
+int Data_center::read_files(){
    
     /*Holds the | flag at the beginning of
      * each line. Used to prime the pump.*/
     char flag;
     ifstream in;
-    if (type == 1)
-        in.open("members.txt");
-    else if (type == 2)
-        in.open("providers.txt");
-    else if (type == 3)
-        in.open("prov_dir.txt");
-    else
-        in.open("managers.txt");
 
+    in.open("members.txt");
     if (in.is_open())
     {
-        /*Prine the pump*/
+        /*Prime the pump*/
         in >> flag;
-
         while (in && !in.eof())
         {
-            if (type == 1)
-            {
-                /*Create temp to be added that invokes
-                * the constructor that reads the data*/
-                Member to_add(in);
-                //Insert into map
-                member_list.insert(make_pair(to_add.get_key(), to_add));
-            }
-            else if (type == 2)
-            {
-                /*Create temp to be added that invokes
-                * the constructor that reads the data*/
-                Provider to_add(in);
-                //Insert into map
-                provider_list.insert(make_pair(to_add.get_key(), to_add));
-            }
-            else if (type == 3)
-            {
-                /*Create temp to be added that invokes
-                * the constructor that reads the data*/
-                Service to_add(in);
-                //Insert into map
-                prov_dir.insert(make_pair(to_add.get_key(), to_add));
-            }
-            else
-            {
-                /*Create temp to be added that invokes
-                * the constructor that reads the data*/
-                Name to_add(in);
-                //Insert into map
-                manager_list.insert(make_pair(to_add.get_key(), to_add));
-            }
+            /*Create temp to be added that invokes
+            * the constructor that reads the data*/
+            Member to_add(in);
+            //Insert into map
+            member_list.insert(make_pair(to_add.get_key(), to_add));
             in.ignore(100, '\n');
-            /*Prime the pump*/
+            //Prime the pump
             in >> flag;
         }
-        in.close();
-        in.clear();
     }
-    else
-        cerr << "\nFile not found\n";
+    in.close();
+    in.clear();
+
+    in.open("providers.txt");
+    if (in.is_open())
+    {
+        /*Prime the pump*/
+        in >> flag;
+        while (in && !in.eof())
+        {
+            /*Create temp to be added that invokes
+            * the constructor that reads the data*/
+            Provider to_add(in);
+            //Insert into map
+            provider_list.insert(make_pair(to_add.get_key(), to_add));
+            in.ignore(100, '\n');
+            //Prime the pump
+            in >> flag;
+        }
+    }
+    in.close();
+    in.clear();
+    
+    in.open("prov_dir.txt");
+    if (in.is_open())
+    {
+        /*Prime the pump*/
+        in >> flag;
+        while (in && !in.eof())
+        {
+            /*Create temp to be added that invokes
+            * the constructor that reads the data*/
+            Service to_add(in);
+            //Insert into map
+            prov_dir.insert(make_pair(to_add.get_key(), to_add));
+            in.ignore(100, '\n');
+            //Prime the pump
+            in >> flag;
+        }
+    }
+    in.close();
+    in.clear();
+
+    in.open("managers.txt");
+    if (in.is_open())
+    {
+        /*Prime the pump*/
+        in >> flag;
+        while (in && !in.eof())
+        {
+            /*Create temp to be added that invokes
+            * the constructor that reads the data*/
+            Name to_add(in);
+            //Insert into map
+            manager_list.insert(make_pair(to_add.get_key(), to_add));
+            in.ignore(100, '\n');
+            //Prime the pump
+            in >> flag;
+        }
+    }
+    in.close();
+    in.clear();
+
+    /*Check if any of the lists are empty, meaning that a file reading
+     * or insertion failed. Doesn't matter which one failed because all of them are
+     * needed."*/
+    if (member_list.empty() || provider_list.empty() || prov_dir.empty()
+            || manager_list.empty())
+        return 0; //Failed
+    return 1; //Files read and maps successfully created
 }
 
 
-//Or a destructor can do this
 void Data_center::write_file(){
 }
 
 
-/*Returns 0 for valid, -1 for invalid, -2 for suspended*/
+/*Returns 0 for valid, -1 for invalid, -2 for valid but suspended,
+ * and -3 if the map is empty*/
 int Data_center::check_valid(const string & input, bool set){
+
     int ret = 0;
     switch(input[0])
     {
@@ -110,7 +140,7 @@ int Data_center::check_valid(const string & input, bool set){
             }
           }
           else
-              cout << "\nNo members stored\n";
+              ret = -3; //Map is empty
           break;
         }
       case '2':
@@ -125,7 +155,7 @@ int Data_center::check_valid(const string & input, bool set){
                 curr_provider = &(it->second);
           }
           else
-              cout << "\nNo providers stored\n";
+              ret = -3; //Map is empty
           break;
         }
       case '3':
@@ -136,7 +166,7 @@ int Data_center::check_valid(const string & input, bool set){
                 ret = -1; //Invalid
           }
           else
-              cout << "\nNo managers stored\n";
+              ret = -3; //Map is empty
           break;
         }
       default:
@@ -159,6 +189,7 @@ void Data_center::disp_map(int map_type){
                 if(!member_list.empty())
                     for(auto it = member_list.begin(); it != member_list.end(); ++it)
                         it->second.Name::display();
+                        //it->second.display_all(); //If you want to disp all info
                 else
                     cout << "\nNo members stored\n";
                 break;
@@ -168,6 +199,7 @@ void Data_center::disp_map(int map_type){
                 if(!provider_list.empty())
                     for(auto it = provider_list.begin(); it != provider_list.end(); ++it)
                         it->second.Name::display();
+                        //it->second.display_all(); //If you want to disp all info
                 else
                     cout << "\nNo providers stored\n";
                 break;
@@ -208,190 +240,111 @@ void Data_center::sum_report(){
 }
 
 
-void Data_center::add_person(){
-    int choice = -1;
-    do{
-        cout << "Here are your options:\n\n"
-             << "\t(1)  Add a new Member\n"
-             << "\t(2)  Add a new Provider\n"
-             << "\t(3)  Exit\n\n"
-             << "Please enter the number corresponding to your selection: ";
+/*This takes and address object which is all of the info needed
+ * for a person. Type is the type of person we are adding.
+ * This returns 1 if the person was added successfully and
+ * 0 otherwise (meaning that the type is not 1 for member
+ * or 2 for provider).*/
+int Data_center::add_person(const Address & to_add, int type){
 
-        cin >> choice;
-        cin.clear();
-        cin.ignore(100, '\n');
+    int ret = 1;
 
-        for(int i = 0; i < 100; ++i){
-            cout << "\n";
-        }
-
-        switch(choice)
-        {
-          case 1:
+    switch(type)
+    {
+        case 1:
             {
-                Member new_member;
-                new_member.gen_num(choice);
-                while(member_list.count(new_member.get_key()))
-                  new_member.gen_num(choice);
-                member_list.insert(make_pair(new_member.get_key(), new_member));
-                break;
+                Member new_mem;
+                new_mem = to_add;
+                new_mem.gen_num('1'); 
+                while(member_list.count(new_mem.get_key()))
+                  new_mem.gen_num('1');
+                member_list.insert(make_pair(new_mem.get_key(), new_mem));
             }
-          case 2:
+            break;
+        case 2:
             {
-                Provider new_provider;
-                new_provider.gen_num(choice);
-                while(provider_list.count(new_provider.get_key()))
-                  new_provider.gen_num(choice);
-                provider_list.insert(make_pair(new_provider.get_key(), new_provider));
-                break;
+                Provider new_prov;
+                new_prov = to_add;
+                new_prov.gen_num('2');
+                while(provider_list.count(new_prov.get_key()))
+                    new_prov.gen_num('2');
+                provider_list.insert(make_pair(new_prov.get_key(), new_prov));
             }
-          case 3:
             break;
-          default:
-            cout << "Error: Invalid selection. Please try again.\n\n";
-            break;
-        }
-    }while(choice < 1 || choice > 3);
+        default:
+            ret = 0;
+    }
+    return ret;
 }
 
 
-void Data_center::remove(){
-    string input;
-         
-    int choice = -1;
-    do{
-        cout << "Here are your options:\n\n"
-             << "\t(1)  Remove a Member\n"
-             << "\t(2)  Remove a Provider\n"
-             << "\t(3)  Display Members\n"
-             << "\t(4)  Display providers\n"
-             << "\t(5)  Exit\n\n"
-             << "Please enter the number corresponding to your selection: ";
-        cin >> choice;
-        cin.clear();
-        cin.ignore(100, '\n');
+/*This takes the ID number of the provider or
+ * member that is to be removed. It returns
+ * 1 if the person exists and has been removed,
+ * 0 if the person does not exist or the map
+ * is empty, and -1 if the number is not a
+ * provider or member number.*/
+int Data_center::remove(const string & num){
 
+    int ret = 0;
 
-        for(int i = 0; i < 100; ++i){
-            cout << "\n";
-        }
-
-        if (choice == 1 || choice == 2)
-            input = read_num(3);
-
-        switch(choice)
-        {
-          case 1:
-            {
-                if (!member_list.empty())
-                {
-                    if(!member_list.erase(input))
-                        cout << "Error: Invalid ID. Please try again.\n\n";
-                    else
-                        cout << "Member with ID [" << input << "] erased.\n\n"; 
-                }
-                else
-                    cout << "\nNo members stored\n";
-                break;
-            }
-          case 2:
-            {
-                if (!provider_list.empty())
-                {
-                    if(!provider_list.erase(input))
-                        cout << "Error: Invalid ID. Please try again.\n\n";
-                    else
-                        cout << "Provider with ID [" << input << "] erased.\n\n";
-                }
-                else
-                    cout << "\nNo providers found\n";
-                break;
-            }
-          case 3:
-            disp_map(1);
+    switch(num[0])
+    {
+        case '1':
+            if (member_list.erase(num))
+                ret = 1;
             break;
-          case 4:
-            disp_map(2);
+        case '2':
+            if (provider_list.erase(num))
+                ret = 1;
             break;
-          case 5:
+        default:
+            ret = -1;
             break;
-          default:
-            cout << "Error: Invalid selection. Please try again.\n\n";
-            break;
-        }
-    }while(choice != 5);
-
+    }
+    return ret;
 }
 
 
-void Data_center::update(){
-    string input;           
-    int choice = -1;
+/*This takes an Address object which is what the address
+ * will be updated to. It also takes the user's ID number.
+ * It checks if the person exists and if so updates their
+ * address. It returns 1 if they exist and if it has been
+ * updated, -1 if the number is not a provider or member
+ * number, and 0 if the map is empty or the number wasn't
+ * found. These returns are really just for unit testing.
+ * We can call check_valid before calling this to check
+ * for everything as well so that the menu doesn't have to
+ * deal with all of these returns.*/
+int Data_center::update(const string & num, const Address & update_to){
 
-    do{
-        cout << "Here are your options:\n\n"
-             << "\t(1)  Update a Member\n"
-             << "\t(2)  Update a Provider\n"
-             << "\t(3)  Display members\n"
-             << "\t(4)  Display providers\n"
-             << "\t(5)  Exit\n\n"
-             << "Please enter the number corresponding to your selection: ";
-        cin >> choice;
-        cin.clear();
-        cin.ignore(100, '\n');
+    int ret = 0;
 
-
-        for(int i = 0; i < 100; ++i){
-            cout << "\n";
-        }
-        if (choice == 1 || choice == 2)
-            input = read_num(3);
-
-        switch(choice)
+        switch(num[0])
         {
-          case 1:
+          case '1':
             {
-                unordered_map<string, Member>::iterator temp;
-                if (!member_list.empty())
+                if (member_list.count(num))
                 {
-                    temp = member_list.find(input);
-                    if(temp != member_list.end())
-                        temp->second.read();
-                    else
-                        cout << "Error: Invalid selection. Please try again.\n\n";
+                    member_list[num].update(update_to);
+                    ret = 1;
                 }
-                else
-                    cout << "\nNo members stored\n";
+            }
+            break;
+          case '2':
+            {
+                if (provider_list.count(num))
+                {
+                    provider_list[num].update(update_to);
+                    ret = 1;
+                }
                 break;
             }
-          case 2:
-            {
-                unordered_map<string, Provider>::iterator temp;
-                if (!provider_list.empty())
-                {
-                    temp = provider_list.find(input);
-                    if(temp != provider_list.end())
-                        temp->second.read();
-                    else
-                        cout << "Error: Invalid selection. Please try again.\n\n";
-                }
-                else
-                    cout << "\nNo providers stored\n";
-                break;
-            }
-          case 3:
-            disp_map(1);
-            break;
-          case 4:
-            disp_map(2);
-            break;
-          case 5:
-            break;
           default:
-            cout << "Error: Invalid selection. Please try again.\n\n";
+            ret = -1;
             break;
         }
-    }while(choice != 5);
+        return ret;
 }
 
 
@@ -406,29 +359,44 @@ void Data_center::add_service(){
         return;
     }
 
+    /*Service date gets read first*/
     Serv_date date;
+    date.read();
+
     map<string, Service>::iterator it;
     bool found;
-
+    /*Here we find the service in the provider
+     * directory.*/
     do
     {
         found = true;
+        /*Read in the service code*/
         string code(read_num(2));
+        /*Attempt to find the service*/
         it = prov_dir.find(code);
-        if (it == prov_dir.end())
+        if (it == prov_dir.end()) //Not found
         {
             cout << "\nService code not found, try again\n";
             found = false;
         }
         else
-            it->second.disp_name();
+            it->second.disp_name(); //Display the serv name
     }while(!found || !is_correct());
 
+    /*Create the provider service by calling the constructor
+     * that takes a member, a service, and a serv_date and
+     * copies the necessary info*/
     Provider_service p_serv(*curr_member, it->second, date);
+    /*Read in the comments*/
+    p_serv.read_comm();
+    /*Copy it into a member service object*/
     Member_service m_serv(*curr_provider, p_serv);
+    /*Insert it into provider's service list*/
     provider_list[curr_provider->get_key()].add_service(p_serv);
+    /*Insert it into member's service list*/
     member_list[curr_member->get_key()].add_service(m_serv);
 
+    /*Display the service fee*/
     it->second.disp_fee();
 
     /*Write to "disk"*/
@@ -592,13 +560,13 @@ void Terminal::interactive_mode(){
         if(choice >= 1 && choice <= 3){
             switch(choice){
                 case 1:
-                    data_link->add_person();
+                    //data_link->add_person();
                     break;
                 case 2:
-                    data_link->remove();
+                    //data_link->remove();
                     break;
                 case 3:
-                    data_link->update();
+                    //data_link->update();
                     break;
             }
         }

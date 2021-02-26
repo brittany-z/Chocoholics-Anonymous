@@ -36,10 +36,7 @@ void Service::write_report(ofstream & out, int type) const{
 }
 
 
-/*For testing. Eventually DELETE
- * When removing testing suite
- * from main*/
-void Service::test(){
+void Service::set_test(){
 
     code = "123456";
     name = "Therapy";
@@ -93,13 +90,30 @@ unsigned Service::get_fee() const{
 
 /* -------- SERV_DATE CLASS METHODS -------- */
 
+Serv_date::Serv_date(): month(0), day(0), year(0) {}
 
-/*This constructor reads in the service date. It checks for valid
+
+/*This constructor copies the Serv_date object that was
+ * used to add the service date prior to everything else.
+ * And it sends the service from the provider directory
+ * to be copied by the Service CC. It is used when creating
+ * a Provider_service.*/
+Serv_date::Serv_date(const Service & curr_serv, const Serv_date & date): 
+    Service(curr_serv), day(date.day), month(date.month), year(date.year){}
+
+
+/*Constructor that sets the data to what is read from
+ * the file.*/
+Serv_date::Serv_date(ifstream & in): Service(in){
+}
+
+
+/*This method reads in the service date. It checks for valid
  * logical date responses and that a future date is not provided.
  * It is used to get the date before a service is selected in the
  * provider directory and before a Provider_service is made per
  * the program description. It is copied into the Provider_service.*/
-Serv_date::Serv_date(){
+void Serv_date::read(){
 
     /*Get current time for range checking/that service date 
      * input is not in the future*/
@@ -176,21 +190,6 @@ Serv_date::Serv_date(){
         }
 
     }while(!valid || !is_correct());
-}
-
-
-/*This constructor copies the Serv_date object that was
- * used to add the service date prior to everything else.
- * And it sends the service from the provider directory
- * to be copied by the Service CC. It is used when creating
- * a Provider_service.*/
-Serv_date::Serv_date(const Service & curr_serv, const Serv_date & date): 
-    Service(curr_serv), day(date.day), month(date.month), year(date.year){}
-
-
-/*Constructor that sets the data to what is read from
- * the file.*/
-Serv_date::Serv_date(ifstream & in): Service(in){
 }
 
 
@@ -274,6 +273,9 @@ bool Serv_date::check_week() const{
 /* -------- PROVIDER_SERVICE CLASS METHODS -------- */
 
 
+Provider_service::Provider_service(){}
+
+
 /*Constructor that sets the data to what is read from
  * the file.*/
 Provider_service::Provider_service(ifstream & in): Serv_date(in){
@@ -285,11 +287,21 @@ Provider_service::Provider_service(ifstream & in): Serv_date(in){
  * the provider directory,the name object in the current 
  * member object (from the member map) that the service 
  * was provided to, and the service date. All by passing
- * objects to constructors. It also prompts and reads 
- * for comments.*/
+ * objects to constructors. It also sets the received 
+ * time and date.*/
 Provider_service::Provider_service(const Name & curr_mem, 
         const Service & curr_ser, const Serv_date & date): 
-        Serv_date(curr_ser, date), mem_info(curr_mem){
+        Serv_date(curr_ser, date), mem_info(curr_mem) {
+
+    //Set the time and date that the data was received by 
+    //the data center
+    received = time(0);
+}
+
+
+/*This method reads in comments from the provider.
+ * It is called after a provider service is made.*/
+void Provider_service::read_comm(){
     
     char response;
     do
@@ -311,13 +323,11 @@ Provider_service::Provider_service(const Name & curr_mem,
             //Make sure it's less than max
         }while (comments.empty() || exceed_max(comments.length(), COM_MAX));
     }
-    
-    //Set the time and date that the data was received by the data center
-    received = time(0);
 }
 
 
-/*Writes to file. Used for generating provider reports.*/
+/*Writes to file. Used for generating provider reports.
+ * Lots of crazy formatting.*/
 void Provider_service::write_report(ofstream & out) const{
 
     Serv_date::write_report(out);
@@ -379,6 +389,9 @@ void Provider_service::display_all() const
 
 
 /* -------- MEMBER_SERVICE CLASS METHODS -------- */
+
+
+Member_service::Member_service(){}
 
 
 /*Constructor that sets the data to what is read from

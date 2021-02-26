@@ -13,16 +13,19 @@ class Data_center{
     public:
         Data_center();
         ~Data_center();
-        void read_file(int type);
+        /*Reads all maps from the txt file. It returns 0 if
+        * the reading or map creation failed, otherwise
+        * it returns 1.*/
+        int read_files();
         void write_file();
         int check_valid(const std::string & input, bool set); 
         void disp_map(int map_type);
         void person_report();
         void pull_EFT();
         void sum_report();
-        void add_person();
-        void remove(); 
-        void update();
+        int add_person(const Address & to_add, int type);
+        int remove(const std::string & num); 
+        int update(const std::string & num, const Address & to_update);
         void add_service();
 
     private:
