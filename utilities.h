@@ -20,5 +20,6 @@ std::string read_num(int type);
 std::string get_curr_date();
 //Writes the current date end time for the service file
 void write_curr_DT(std::ofstream & out);
+void remove_files();
 
 #endif
