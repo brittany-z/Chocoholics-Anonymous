@@ -4,20 +4,8 @@
 using namespace std;
 
 
-/*Used to read in from the user since the only time
- * that we would instantiate an object that isn't
- * being read from file (use other constructor)
- * would be when the manager wants to add a person.*/
-Name::Name(){
 
-    do
-    {
-        cout << "\nPlease enter their full name: ";
-        getline(cin, a_name);
-        cout << "\nYou entered: " << a_name << endl;
-    }while (a_name.empty() || exceed_max(a_name.length(), 
-                N_MAX) || !is_correct());
-}
+Name::Name(){};
 
 
 /*Constructor that sets the data to what is read from
@@ -28,6 +16,22 @@ Name::Name(ifstream & in){
     getline(in, ID_num, '|');
 
 }
+
+
+/*Used to prompt and read a name from the manager
+ * when they want to add a provider or member.
+ * It is called by the address class read.*/
+void Name::read(){
+
+    do
+    {
+        cout << "\nPlease enter their full name: ";
+        getline(cin, a_name);
+        cout << "\nYou entered: " << a_name << endl;
+    }while (a_name.empty() || exceed_max(a_name.length(), 
+                N_MAX) || !is_correct());
+}
+
 
 
 /*This generates an ID_num when a manager adds a user.
@@ -91,3 +95,13 @@ void Name::copy_name(string & prov_name) const{
 
     prov_name = a_name;
 }
+
+
+/*Used to get the name for the filename of a
+ * report.*/
+string Name::get_name() const{
+
+    return a_name;
+}
+
+

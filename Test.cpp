@@ -6,9 +6,28 @@
 #include "utilities.h"
 #include "services.h"
 
-TEST_CASE("Testing check_valid") {
+
+TEST_CASE("Testing read_files") {
+    Data_center center;
+    CHECK(center.read_files() == 1);
+}
+
+TEST_CASE("Testing check_valid for invalid member") {
 	Data_center center;
-	CHECK(center.check_valid("1234", true) == -1);
+    center.read_files();
+	CHECK(center.check_valid("1234", false) == -1);
+}
+
+TEST_CASE("Testing check_valid valid member") {
+    Data_center center;
+    center.read_files();
+    CHECK(!center.check_valid("128461839", false));
+}
+
+TEST_CASE("Testing Member add_service") {
+    Member mem;
+    Member_service serv;
+    CHECK(mem.add_service(serv));
 }
 
 

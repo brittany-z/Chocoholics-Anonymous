@@ -5,14 +5,8 @@ using namespace std;
 
 /* --------------- ADDRESS CLASS METHODS --------------- */
 
-/*Calls read because we need a separate read that
- * can be used if a manager wants to change someone's
- * address. So that is why we can't manually read
- * here.*/
-Address::Address(){
-    
-    read();
-}
+
+Address::Address(){};
 
 
 /*Constructor that sets the data to what is read from
@@ -60,11 +54,23 @@ void Address::display() const{
 }
 
 
-/*This method prompts and reads an address from the manager.
- * It is called by the default constructor so that we can
- * read the data when a person is instantiated and it is
- * called when a manager chooses to change someone's address.*/
+/*This method is called when a manager wants to add
+ * a person.*/
 void Address::read(){
+
+    Name::read();
+    /*Misnomer, it is setting the address
+     * in this case.*/
+    change_address();
+
+}
+
+
+/*This method prompts and reads an address from the manager.
+ * Called when a manager chooses to change someone's address
+ * and in the read method to initialize the data when a
+ * person is added.*/
+void Address::change_address(){
 
      do
     {
@@ -105,6 +111,17 @@ void Address::read(){
 }
 
 
+/*Used to update an address. Called in the data
+ * center update method.*/
+void Address::update(const Address & update_to){
+
+    street = update_to.street;
+    city = update_to.city;
+    state = update_to.state;
+    zip = update_to.zip;
+}
+
+
 //For testing, calls Name display
 void Address::display_all() const
 {
@@ -113,20 +130,41 @@ void Address::display_all() const
 }
 
 
-
 /* -------------- PROVIDER CLASS METHODS ------------------ */
+
 
 /*This is all that is needs to do because when
  * a provider is instantiated by the manager,
  * the provider list would be empty.*/
-Provider::Provider(): num_consults(0), total_fees(0){
-}
+Provider::Provider(): num_consults(0), total_fees(0){}
 
 
 /*Constructor that sets the data to what is read from
  * the file.*/
 Provider::Provider(ifstream & in): Address(in), num_consults(0), total_fees(0){
 
+}
+
+
+/*Used to add a provider in the add_person method in the Data_center
+ * class. It copies the Address object which contains the name
+ * and address of the new provider.*/
+Provider::Provider(const Address & to_add): Address(to_add), num_consults(0),
+                    total_fees(0) {}
+
+
+/*This method checks if the provider has provided any
+ * services this week. It is called in the person_report
+ * method in the Data_center class before a report is
+ * generated.*/
+bool Provider::check_week() const{
+
+    for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
+    {
+        if (it->Serv_date::check_week())
+            return true;
+    }
+    return false;
 }
 
 
@@ -138,7 +176,10 @@ void Provider::write_report(ofstream & out) const{
     {
         out << "\nSERVICES:\n";
         for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
-            it->write_report(out);
+            /*Check if the service occured in the current
+             * week*/
+            if (it->Serv_date::check_week())
+                it->write_report(out);
         out << "\nTotal number of consulations this week: " << num_consults;
         out << "\nTotal fees to be paid for the week: $" << total_fees;
     }
@@ -151,7 +192,7 @@ void Provider::write_report(ofstream & out) const{
  * Since the list is ordered by the time and date that it was
  * received by the data center, then the service is just added
  * to the end of the list.*/
-void Provider::add_service(const Provider_service & to_add){
+int Provider::add_service(const Provider_service & to_add){
 
     /*Add at end of list since it is the latest service
      * received by the data center.*/
@@ -160,11 +201,14 @@ void Provider::add_service(const Provider_service & to_add){
     /*Add fee of service to total fees and increment
      * the total number of services if the service
      * occurred within the current week.*/
-    if (to_add.check_week()) //Serv_date method
+    if (to_add.Serv_date::check_week()) //Serv_date method
     {
         total_fees += to_add.get_fee(); //Service method
         ++num_consults;
     }
+    if (serv_list.empty())
+        return 0;
+    return 1;
 }
 
 
@@ -194,8 +238,7 @@ void Provider::display_all() const{
 /*This is all that is needs to do because when
  * a provider is instantiated by the manager,
  * the provider list would be empty.*/
-Member::Member(): suspended(false){
-}
+Member::Member(): suspended(false){}
 
 
 /*Constructor that set the data to what is read from
@@ -205,6 +248,12 @@ Member::Member(ifstream & in): Address(in){
     in >> suspended;
     in.ignore(100, '|');
 }
+
+
+/*Used to add a member in the add_person method in the Data_center
+ * class. It copies the Address object which contains the name
+ * and address of the new member.*/
+Member::Member(const Address & to_add): Address(to_add), suspended(false) {}
 
 
 void Member::write_file(ofstream & out) const{
@@ -217,6 +266,21 @@ void Member::write_file(ofstream & out) const{
 }
 
 
+/*This method checks if the member has provided any
+ * services this week. It is called in the person_report
+ * method in the Data_center class before a report is
+ * generated.*/
+bool Member::check_week() const{
+
+    for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
+    {
+        if (it->Serv_date::check_week())
+            return true;
+    }
+    return false;
+}
+
+
 
 /*Writes to file for generating a report.*/
 void Member::write_report(ofstream & out) const{
@@ -226,7 +290,9 @@ void Member::write_report(ofstream & out) const{
     {
         out << "\nSERVICES:\n";
         for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
-            if (it->check_week())
+            /*Check if the service occured in the current
+             * week*/
+            if (it->Serv_date::check_week())
                 it->write_report(out);
     }
     else
@@ -236,7 +302,7 @@ void Member::write_report(ofstream & out) const{
 
 /*This method inserts a member service into the member's 
  * service list in order by date.*/
-void Member::add_service(const Member_service & to_add){
+int Member::add_service(const Member_service & to_add){
 
     /*If the list is empty then we insert at the
      * beginning of the list.*/
@@ -266,6 +332,9 @@ void Member::add_service(const Member_service & to_add){
         if (!added)
             serv_list.push_back(to_add);
     }
+    if (serv_list.empty())
+        return 0;
+    return 1;
 }
 
 

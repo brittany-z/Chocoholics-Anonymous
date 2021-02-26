@@ -19,9 +19,7 @@ class Service{
         Service(); 
         Service(std::ifstream & in);
         void write_report(std::ofstream & out, int type) const;
-        /*For testing. Eventually DELETE when testing suite
-         * is removed from main.*/
-        void test();
+        void set_test();
         void disp_name() const;
         void disp_fee() const;
         void display() const;
@@ -42,6 +40,7 @@ class Serv_date: public Service{
         Serv_date(const Service & curr_serv, const Serv_date & date); 
         Serv_date(std::ifstream & in);
         Serv_date(const Service & curr_ser);
+        void read();
         void write_report(std::ofstream & out) const;
         int compare_date(const Serv_date & curr_serv) const;
         void display() const;
@@ -60,9 +59,11 @@ class Serv_date: public Service{
 class Provider_service: public Serv_date{
 
     public:
+        Provider_service();
         Provider_service(std::ifstream & in);
         Provider_service(const Name & curr_mem, const Service & curr_serv,
-                const Serv_date & date);;
+                const Serv_date & date);
+        void read_comm();
         void write_report(std::ofstream & out) const;
         void write_comm(std::ofstream & out) const;
         void display_all() const; //For testing
@@ -77,6 +78,7 @@ class Provider_service: public Serv_date{
 class Member_service: public Serv_date{
 
     public:
+        Member_service();
         Member_service(std::ifstream & in);
         Member_service(const Name & curr_prov, const Provider_service & curr_serv);
         void write_report(std::ofstream & out) const;
