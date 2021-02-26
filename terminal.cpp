@@ -253,8 +253,7 @@ int Data_center::add_person(const Address & to_add, int type){
     {
         case 1:
             {
-                Member new_mem;
-                new_mem = to_add;
+                Member new_mem(to_add);
                 new_mem.gen_num('1'); 
                 while(member_list.count(new_mem.get_key()))
                   new_mem.gen_num('1');
@@ -263,8 +262,7 @@ int Data_center::add_person(const Address & to_add, int type){
             break;
         case 2:
             {
-                Provider new_prov;
-                new_prov = to_add;
+                Provider new_prov(to_add);
                 new_prov.gen_num('2');
                 while(provider_list.count(new_prov.get_key()))
                     new_prov.gen_num('2');

@@ -44,7 +44,7 @@ class Provider: public Address{
     public:
         Provider();
         Provider(std::ifstream & in);
-        Provider & operator = (const Address & to_add);
+        Provider(const Address & to_add);
         bool check_week() const;
         void write_report(std::ofstream & out) const;
         void write_rec_curr_DT(std::ofstream & out) const;
@@ -64,7 +64,7 @@ class Member: public Address{
     public:
         Member();
         Member(char first_num);
-        Member & operator = (const Address & to_add);
+        Member(const Address & to_add);
         Member(std::ifstream & in);
         bool check_week() const;
         void write_file(std::ofstream & out) const;

@@ -146,11 +146,11 @@ Provider::Provider(ifstream & in): Address(in), num_consults(0), total_fees(0){
 }
 
 
-Provider & Provider::operator = (const Address & to_add){
-
-    Address::operator = (to_add);
-    return *this;
-}
+/*Used to add a provider in the add_person method in the Data_center
+ * class. It copies the Address object which contains the name
+ * and address of the new provider.*/
+Provider::Provider(const Address & to_add): Address(to_add), num_consults(0),
+                    total_fees(0) {}
 
 
 /*This method checks if the provider has provided any
@@ -250,11 +250,10 @@ Member::Member(ifstream & in): Address(in){
 }
 
 
-Member & Member::operator = (const Address & to_add){
-
-    Address::operator = (to_add);
-    return *this;
-}
+/*Used to add a member in the add_person method in the Data_center
+ * class. It copies the Address object which contains the name
+ * and address of the new member.*/
+Member::Member(const Address & to_add): Address(to_add), suspended(false) {}
 
 
 void Member::write_file(ofstream & out) const{

@@ -7,6 +7,14 @@ using namespace std;
 
 int main(){
 
+    Data_center test;
+
+    Address obj;
+    obj.read();
+    test.add_person(obj, 1);
+    test.disp_map(1);
+
+
     //Uncomment the following block to test provider's service 
     //list (FYI cannot test both provider service list and member 
     //service list at the same time)
