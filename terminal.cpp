@@ -16,99 +16,83 @@ Data_center::~Data_center(){
  * the reading or map creation failed, otherwise
  * it returns 1.*/
 int Data_center::read_files(){
-   
+  
+    /*Set for failure. This will occur if any of
+     * the files do not exist or if any of the
+     * maps were not successfully read in and
+     * inserted*/
+    int ret = 0;
     /*Holds the | flag at the beginning of
      * each line. Used to prime the pump.*/
     char flag;
     ifstream in;
 
-    in.open("members.txt");
-    if (in.is_open())
+    for (int i = 1; i < 5; ++i)
     {
-        /*Prime the pump*/
-        in >> flag;
-        while (in && !in.eof())
-        {
-            /*Create temp to be added that invokes
-            * the constructor that reads the data*/
-            Member to_add(in);
-            //Insert into map
-            member_list.insert(make_pair(to_add.get_key(), to_add));
-            in.ignore(100, '\n');
-            //Prime the pump
-            in >> flag;
-        }
-    }
-    in.close();
-    in.clear();
+        if (i == 1)
+            in.open("members.txt");
+        else if (i == 2)
+            in.open("providers.txt");
+        else if (i == 3)
+            in.open("prov_dir.txt");
+        else
+            in.open("managers.txt");
 
-    in.open("providers.txt");
-    if (in.is_open())
-    {
-        /*Prime the pump*/
-        in >> flag;
-        while (in && !in.eof())
+        if (in.is_open())
         {
-            /*Create temp to be added that invokes
-            * the constructor that reads the data*/
-            Provider to_add(in);
-            //Insert into map
-            provider_list.insert(make_pair(to_add.get_key(), to_add));
-            in.ignore(100, '\n');
-            //Prime the pump
+            /*Prime the pump*/
             in >> flag;
+            while (in && !in.eof())
+            {
+                if (i == 1)
+                {
+                    /*Create temp to be added that invokes
+                    * the constructor that reads the data*/
+                    Member to_add(in);
+                    //Insert into map
+                    member_list.insert(make_pair(to_add.get_key(), to_add));
+                }
+                else if (i == 2)
+                {
+                    /*Create temp to be added that invokes
+                    * the constructor that reads the data*/
+                    Provider to_add(in);
+                    //Insert into map
+                    provider_list.insert(make_pair(to_add.get_key(), to_add));
+                }
+                else if (i == 3)
+                {
+                    /*Create temp to be added that invokes
+                    * the constructor that reads the data*/
+                    Service to_add(in);
+                    //Insert into map
+                    prov_dir.insert(make_pair(to_add.get_key(), to_add));
+                }
+                else
+                {
+                    /*Create temp to be added that invokes
+                    * the constructor that reads the data*/
+                    Name to_add(in);
+                    //Insert into map
+                    manager_list.insert(make_pair(to_add.get_key(), to_add));
+                }
+                in.ignore(100, '\n');
+                //Prime the pump
+                in >> flag;
+            }
+            in.close();
+            in.clear();
         }
     }
-    in.close();
-    in.clear();
-    
-    in.open("prov_dir.txt");
-    if (in.is_open())
-    {
-        /*Prime the pump*/
-        in >> flag;
-        while (in && !in.eof())
-        {
-            /*Create temp to be added that invokes
-            * the constructor that reads the data*/
-            Service to_add(in);
-            //Insert into map
-            prov_dir.insert(make_pair(to_add.get_key(), to_add));
-            in.ignore(100, '\n');
-            //Prime the pump
-            in >> flag;
-        }
-    }
-    in.close();
-    in.clear();
-
-    in.open("managers.txt");
-    if (in.is_open())
-    {
-        /*Prime the pump*/
-        in >> flag;
-        while (in && !in.eof())
-        {
-            /*Create temp to be added that invokes
-            * the constructor that reads the data*/
-            Name to_add(in);
-            //Insert into map
-            manager_list.insert(make_pair(to_add.get_key(), to_add));
-            in.ignore(100, '\n');
-            //Prime the pump
-            in >> flag;
-        }
-    }
-    in.close();
-    in.clear();
 
     /*Check if any of the lists are empty, meaning that a file reading
      * or insertion failed. Doesn't matter which one failed because all of them are
      * needed."*/
-    if (member_list.empty() || provider_list.empty() || prov_dir.empty()
-            || manager_list.empty())
-        return 0; //Failed
-    return 1; //Files read and maps successfully created
+    if (!member_list.empty() || !provider_list.empty() || !prov_dir.empty()
+            || !manager_list.empty())
+        ret = 1; //Files read and maps successfully created
+
+    return ret;
 }
 
 
