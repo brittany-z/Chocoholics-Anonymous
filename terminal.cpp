@@ -1,5 +1,6 @@
 #include <iostream>
 #include "terminal.h"
+#include <algorithm>
 using namespace std;
 
 
@@ -102,7 +103,7 @@ void Data_center::write_file(){
 
 /*Returns 0 for valid, -1 for invalid, -2 for valid but suspended,
  * and -3 if the map is empty*/
-int Data_center::check_valid(const string & input, bool set){
+int Data_center::check_valid(const string & input){
 
     int ret = 0;
     switch(input[0])
@@ -119,7 +120,7 @@ int Data_center::check_valid(const string & input, bool set){
             {
                 if (it->second.check_susp())
                     ret = -2;//Valid but suspended
-                if(set) 
+                else
                     curr_member = &(it->second);
             }
           }
@@ -212,7 +213,80 @@ void Data_center::disp_map(int map_type){
 }
 
 
-void Data_center::person_report(){
+/*Used to write a provider or member report. It
+ * is passed the person's ID_num. It returns 0
+ * if the person has not received or provided
+ * any services this week (no report generated)
+ * or if the number doesn't match any number in
+ * the system, -1 if the ID number provided is
+ * not a valid number (doesn't start with the
+ * proper identifier), and 1 if a report was
+ * successfully generated. Really only need to
+ * account for 0 or 1 because check_valid should
+ * be called first which would handle erroneous
+ * input.*/
+int Data_center::person_report(const string & num) {
+
+    switch(num[0])
+    {
+        case '1':
+            {   
+                if (member_list.count(num))
+                {
+                    //Check if they received services this week
+                    if (!member_list[num].check_week())
+                        return 0;
+                }
+                else
+                    return 0;
+            }
+            break;
+        case '2':
+            {
+                if (provider_list.count(num))
+                {
+                    //Check if they provided services this week
+                    if (!provider_list[num].check_week())
+                        return 0;
+                }
+                else
+                    return 0;
+            }
+            break;
+        default:
+            return -1; //First char isn't 1 or 2
+            break;
+    }
+    
+    /*Start the file name off with the current date*/
+    string filename(get_curr_date());
+
+    /*Get the name of the person*/
+    string name;
+    if (num[0] == '1')
+        name = member_list[num].get_name();
+    else
+        name = provider_list[num].get_name();
+
+    /*Remove spaces in the name*/
+    name.erase(std::remove(name.begin(), name.end(), ' '), name.end());
+
+    /*Append the name to the file name (the current date)*/
+    filename += name + ".txt";
+    
+    ofstream out;
+    out.open(filename.c_str());
+    if (out.is_open())
+    {
+        if (num[0] == '1')
+            member_list[num].write_report(out);
+        else
+            provider_list[num].write_report(out);
+
+        out.close();
+        out.clear();
+    }
+    return 1;
 }
 
 
@@ -330,6 +404,9 @@ int Data_center::update(const string & num, const Address & update_to){
 }
 
 
+
+
+
 /*This method adds a service to the people and writes
  * to "disk". It relies on the curr_provider and
  * curr_member pointers to be set.*/
@@ -338,6 +415,15 @@ void Data_center::add_service(){
     if (prov_dir.empty())
     {
         cerr << "\nProvider Directory not found\n";
+        return;
+    }
+   
+    /*This shouldn't happen because suspension
+     * should be checked prior to calling this
+     * method.*/
+    if (!curr_member)
+    {
+        cout << "\nMember is suspended\n";
         return;
     }
 
@@ -402,6 +488,14 @@ void Data_center::add_service(){
 }
 
 
+void Data_center::set_serv_test(){
+
+    Member_service temp;
+    temp.set_test();
+    member_list["128461839"].add_service(temp);
+}
+
+
 /* -------- TERMINAL CLASS METHODS -------- */
 
 Terminal::Terminal(Data_center & link){
@@ -409,6 +503,7 @@ Terminal::Terminal(Data_center & link){
 }
 
 
+/*CANNOT ADD SERVICES IF THE MEMBER IS SUSPENDED*/
 void Terminal::provider_menu(){
 
     // Clear screen
@@ -437,6 +532,7 @@ void Terminal::provider_menu(){
         if(choice >= 1 && choice <= 2){
             switch(choice){
                 case 1:
+                    /*Make sure member is not suspended*/
                     data_link->add_service();
                     break;
                 case 2:
@@ -486,10 +582,10 @@ void Terminal::manager_menu(){
         if(choice >= 1 && choice <= 5){
             switch(choice){
                 case 1:
-                    data_link->person_report(); 
+                    //data_link->person_report(); 
                     break;
                 case 2:
-                    data_link->person_report();
+                    //data_link->person_report();
                     break;
                 case 3:
                     data_link->sum_report();
@@ -574,7 +670,6 @@ void Terminal::start_menu(){
 
     string ID_num(read_num(1));
     char first_num = ID_num[0];
-    bool set = 0;
    
     // Checking if the user is not a Provider nor a Manager.
     if(first_num != '2' && first_num != '3'){
@@ -590,7 +685,7 @@ void Terminal::start_menu(){
 
     //validate(data_link, ID_num);
 
-    if(data_link->check_valid(ID_num, set) < 0){
+    if(data_link->check_valid(ID_num) < 0){
         // More to do here, depends on what messages/options
         // check_valid provides on the Data_center side.
         return;
@@ -611,8 +706,7 @@ void Terminal::start_menu(){
 /* Some stuff written in case Data_center doesn't handle the error messages.
 int Terminal::validate(const Data_center * link, string & ID_num){
 
-    bool set = 0;
-    int valid = link->check_valid(ID_num, set); // returns 0 for valid, -1 for invalid
+    int valid = link->check_valid(ID_num); // returns 0 for valid, -1 for invalid
     char response;
 
     while(valid == -1){

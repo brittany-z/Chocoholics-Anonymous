@@ -45,14 +45,12 @@ class Serv_date: public Service{
         int compare_date(const Serv_date & curr_serv) const;
         void display() const;
         bool check_week() const;
+        void set_test();
 
     protected:
         int month;
         int day;
         int year;
-        /*I think this may not be needed because the check_week
-         * function can do this.
-        bool curr_week;*/
 };
 
 
@@ -83,6 +81,7 @@ class Member_service: public Serv_date{
         Member_service(const Name & curr_prov, const Provider_service & curr_serv);
         void write_report(std::ofstream & out) const;
         void display_all() const; //For testing
+        void set_test();
 
     private:
         std::string prov_name;
