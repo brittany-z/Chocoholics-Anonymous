@@ -174,17 +174,17 @@ void Provider::write_report(ofstream & out) const{
     Address::write_report(out);
     if (!serv_list.empty())
     {
-        out << "\nSERVICES:\n";
+        out << "\nServices provided this week:\n";
         for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
+        {
             /*Check if the service occured in the current
              * week*/
             if (it->Serv_date::check_week())
                 it->write_report(out);
+        }
         out << "\nTotal number of consulations this week: " << num_consults;
         out << "\nTotal fees to be paid for the week: $" << total_fees;
     }
-    else
-        out << "\nNo services provided this week\n";
 }
 
 
@@ -288,15 +288,13 @@ void Member::write_report(ofstream & out) const{
     Address::write_report(out);
     if (!serv_list.empty())
     {
-        out << "\nSERVICES:\n";
+        out << "\nServices received this week:\n";
         for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
             /*Check if the service occured in the current
              * week*/
             if (it->Serv_date::check_week())
                 it->write_report(out);
     }
-    else
-        out << "\nNo services provided this week\n";
 }
 
 

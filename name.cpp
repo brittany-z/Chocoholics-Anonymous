@@ -67,8 +67,9 @@ void Name::write_file(ofstream & out) const{
 /*Writes to report*/
 void Name::write_report(ofstream & out) const{
 
-    out << "Name: " << a_name
-        << "\nNumber: " << ID_num;
+    out << "Name: ";
+    out << a_name;
+    out << "\nNumber: " << ID_num;
 }
 
 

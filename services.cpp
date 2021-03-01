@@ -270,6 +270,21 @@ bool Serv_date::check_week() const{
 }
 
 
+//Sets to today's date
+void Serv_date::set_test(){
+
+    Service::set_test();
+
+    time_t now = time(0);
+    tm * curr = localtime(&now);
+
+    month = curr->tm_mon + 1;
+    day = curr->tm_mday;
+    year = curr->tm_year + 1900;
+
+}
+
+
 /* -------- PROVIDER_SERVICE CLASS METHODS -------- */
 
 
@@ -429,4 +444,12 @@ void Member_service::display_all() const
     Serv_date::display();
     cout << "\nProvider name: " << prov_name << endl;
 }
+
+
+void Member_service::set_test(){
+
+    Serv_date::set_test();
+    prov_name = "Red Reddington";
+}
+
 

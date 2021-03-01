@@ -18,15 +18,16 @@ class Data_center{
         * it returns 1.*/
         int read_files();
         void write_file();
-        int check_valid(const std::string & input, bool set); 
+        int check_valid(const std::string & input); 
         void disp_map(int map_type);
-        void person_report();
+        int person_report(const std::string & num);
         void pull_EFT();
         void sum_report();
         int add_person(const Address & to_add, int type);
         int remove(const std::string & num); 
         int update(const std::string & num, const Address & to_update);
         void add_service();
+        void set_serv_test();
 
     private:
         std::unordered_map<std::string, Provider> provider_list;
