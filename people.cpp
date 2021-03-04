@@ -136,20 +136,18 @@ void Address::display_all() const
 /*This is all that is needs to do because when
  * a provider is instantiated by the manager,
  * the provider list would be empty.*/
-Provider::Provider(): num_consults(0), total_fees(0){}
+Provider::Provider(): num_consults(0), num_billed(0), total_fees(0){}
 
 
 /*Constructor that sets the data to what is read from
  * the file.*/
-Provider::Provider(ifstream & in): Address(in), num_consults(0), total_fees(0){
-
-}
+Provider::Provider(ifstream & in): Address(in), num_consults(0), num_billed(0), total_fees(0){}
 
 
 /*Used to add a provider in the add_person method in the Data_center
  * class. It copies the Address object which contains the name
  * and address of the new provider.*/
-Provider::Provider(const Address & to_add): Address(to_add), num_consults(0),
+Provider::Provider(const Address & to_add): Address(to_add), num_consults(0), num_billed(0),
                     total_fees(0) {}
 
 
@@ -157,14 +155,35 @@ Provider::Provider(const Address & to_add): Address(to_add), num_consults(0),
  * services this week. It is called in the person_report
  * method in the Data_center class before a report is
  * generated.*/
-bool Provider::check_week() const{
+bool Provider::check_week(int type) const{
 
     for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
     {
-        if (it->Serv_date::check_week())
-            return true;
+        if (type == 1)
+        {
+            if (it->Serv_date::check_week())
+                return true;
+        }
+        else if (type == 2)
+        {
+            if (it->check_recv_week())
+                return true;
+        }
     }
     return false;
+}
+
+
+void Provider::write_file(ofstream & out) const{
+    
+    Address::write_file(out);
+    out << endl;
+    if (!serv_list.empty())
+    {
+        for (auto it = serv_list.begin(); it != serv_list.end(); ++it)
+            it->write_file(out);
+    }
+    out << "|" << endl;
 }
 
 
@@ -198,13 +217,12 @@ int Provider::add_service(const Provider_service & to_add){
      * received by the data center.*/
     serv_list.push_back(to_add);
 
-    /*Add fee of service to total fees and increment
-     * the total number of services if the service
-     * occurred within the current week.*/
-    if (to_add.Serv_date::check_week()) //Serv_date method
-    {
-        total_fees += to_add.get_fee(); //Service method
+    if (to_add.Serv_date::check_week())
         ++num_consults;
+    if (to_add.check_recv_week())
+    {
+        total_fees += to_add.get_fee(); 
+        ++num_billed;
     }
     if (serv_list.empty())
         return 0;
@@ -227,7 +245,20 @@ void Provider::display_all() const{
         cout << "\nThis provider has not provided any services.\n";
 
     cout << "\nNumber of consultations this week: " << num_consults
+         << "\nNumber of consultations billed for this week: " << num_billed
          << "\nTotal fees for this week: $" << total_fees << endl;
+}
+
+
+float Provider::get_fees() const{
+
+    return total_fees;
+}
+
+
+unsigned short Provider::get_num_billed() const{
+
+    return num_billed;
 }
 
 
@@ -246,7 +277,7 @@ Member::Member(): suspended(false){}
 Member::Member(ifstream & in): Address(in){
 
     in >> suspended;
-    in.ignore(100, '|');
+    in.ignore(100, '\n');
 }
 
 
@@ -260,9 +291,9 @@ void Member::write_file(ofstream & out) const{
     
     Address::write_file(out);
     if(suspended)
-        out << "1" << '|';
+        out << "1" << endl;
     else
-        out << "0" << '|';
+        out << "0" << endl;
 }
 
 

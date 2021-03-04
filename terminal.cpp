@@ -58,7 +58,21 @@ int Data_center::read_files(){
                     /*Create temp to be added that invokes
                     * the constructor that reads the data*/
                     Provider to_add(in);
-                    //Insert into map
+
+                    in.ignore(100, '\n');
+                    in >> flag;
+                    while (flag == '$')
+                    {
+                        Provider_service p_serv(in);
+                        to_add.add_service(p_serv);
+                        if (member_list.count(p_serv.get_memkey()))
+                        {
+                            Member_service m_serv(to_add, p_serv);
+                            member_list[p_serv.get_memkey()].add_service(m_serv);
+                        }
+                        in >> flag;
+                    }
+                    in.ignore(100, '\n');
                     provider_list.insert(make_pair(to_add.get_key(), to_add));
                 }
                 else if (i == 3)
@@ -76,8 +90,8 @@ int Data_center::read_files(){
                     Name to_add(in);
                     //Insert into map
                     manager_list.insert(make_pair(to_add.get_key(), to_add));
+                    in.ignore(100, '\n');
                 }
-                in.ignore(100, '\n');
                 //Prime the pump
                 in >> flag;
             }
@@ -98,6 +112,31 @@ int Data_center::read_files(){
 
 
 void Data_center::write_file(){
+
+    ofstream out;
+    out.open("providers.txt");
+    if (out.is_open())
+    {
+        if (!provider_list.empty())
+        {
+            for(auto it = provider_list.begin(); it != provider_list.end(); ++it)
+                it->second.write_file(out);
+        }
+        out.close();
+        out.clear();
+    }
+
+    out.open("members.txt");
+    if (out.is_open())
+    {
+        if (!member_list.empty())
+        {
+            for(auto it = member_list.begin(); it != member_list.end(); ++it)
+                it->second.write_file(out);
+        }
+        out.close();
+        out.clear();
+    }
 }
 
 
@@ -162,9 +201,7 @@ int Data_center::check_valid(const string & input){
 }
 
 
-/*This displays a map depending on the map_type. It only
- * displays the name and number of the people maps
- * because chris doesn't need to know more than that.*/
+/*This displays a map depending on the map_type.*/
 void Data_center::disp_map(int map_type){
 
     switch (map_type)
@@ -173,8 +210,8 @@ void Data_center::disp_map(int map_type){
             {
                 if(!member_list.empty())
                     for(auto it = member_list.begin(); it != member_list.end(); ++it)
-                        it->second.Name::display();
-                        //it->second.display_all(); //If you want to disp all info
+                        //it->second.Name::display(); //Disp name and address
+                        it->second.display_all(); //If you want to disp all info
                 else
                     cout << "\nNo members stored\n";
                 break;
@@ -183,8 +220,8 @@ void Data_center::disp_map(int map_type){
             {
                 if(!provider_list.empty())
                     for(auto it = provider_list.begin(); it != provider_list.end(); ++it)
-                        it->second.Name::display();
-                        //it->second.display_all(); //If you want to disp all info
+                        //it->second.Name::display(); //Disp name and address
+                        it->second.display_all(); //If you want to disp all info
                 else
                     cout << "\nNo providers stored\n";
                 break;
@@ -246,7 +283,7 @@ int Data_center::person_report(const string & num) {
                 if (provider_list.count(num))
                 {
                     //Check if they provided services this week
-                    if (!provider_list[num].check_week())
+                    if (!provider_list[num].check_week(1))
                         return 0;
                 }
                 else
@@ -257,9 +294,6 @@ int Data_center::person_report(const string & num) {
             return -1; //First char isn't 1 or 2
             break;
     }
-    
-    /*Start the file name off with the current date*/
-    string filename(get_curr_date());
 
     /*Get the name of the person*/
     string name;
@@ -271,8 +305,8 @@ int Data_center::person_report(const string & num) {
     /*Remove spaces in the name*/
     name.erase(std::remove(name.begin(), name.end(), ' '), name.end());
 
-    /*Append the name to the file name (the current date)*/
-    filename += name + ".txt";
+    string filename(name);
+    filename += get_curr_date() + ".txt";
     
     ofstream out;
     out.open(filename.c_str());
@@ -290,11 +324,69 @@ int Data_center::person_report(const string & num) {
 }
 
 
-void Data_center::pull_EFT(){
+/*Returns 0 if the current provider pointer
+ * is null (which shouldn't happen since this
+ * is only called after a service is entered
+ * which would mean that check_valid has been
+ * called and set the pointer), and 1 otherwise.*/
+int Data_center::write_EFT(float fee) const{
+
+    if (!curr_provider)
+        return 0;
+
+    ofstream out;
+    out.open("EFT.txt", ios::app);
+    if (out.is_open())
+    {
+        curr_provider->Name::write_report(out);
+        out << "\nFee: $" << fee << endl;
+
+        out.close();
+        out.clear();
+    }
+    return 1;
 }
 
+/*Returns 0 if the provider list is empty,
+ * and 1 if it is not empty and a report
+ * has been written*/
+int Data_center::sum_report() const{
 
-void Data_center::sum_report(){
+    if(provider_list.empty())
+        return 0;
+
+    int num_prov, total_consults, overall_fees;
+    num_prov = total_consults = overall_fees = 0;
+
+    ofstream out;
+    out.open("Summary_Report.txt");
+    if (out.is_open())
+    {
+        out << "SUMMARY REPORT " << get_curr_date() << "\n\n";
+
+        for(auto it = provider_list.begin(); it != provider_list.end(); ++it)
+        {
+            if (it->second.check_week(2))
+            {
+                int fees, consults;
+                fees = it->second.get_fees();
+                consults = it->second.get_num_billed();
+                ++num_prov;
+                total_consults += consults;
+                overall_fees += fees;
+
+                it->second.Name::write_report(out);
+                out << "\nNumber of consultations: " << consults
+                    << "\nTotal fees: $" << fees << endl;
+            }
+        }
+        out << "\n\nTOTALS" << "\nProviders: " << num_prov
+            << "\nConsultations: " << total_consults
+            << "\nFees: " << overall_fees << endl;
+        out.close();
+        out.clear();
+    }
+    return 1;
 }
 
 
@@ -465,13 +557,14 @@ void Data_center::add_service(){
     member_list[curr_member->get_key()].add_service(m_serv);
 
     /*Display the service fee*/
-    it->second.disp_fee();
+    float fee = it->second.get_fee();
+    cout << "\nFee for this service: $" << fee << endl;
 
     /*Write to "disk"*/
     ofstream out;
     
     /*The ios::app command appends to the file*/
-    out.open("services.txt", ios::app);
+    out.open("Services.txt", ios::app);
 
     if (out.is_open())
     {
@@ -485,6 +578,9 @@ void Data_center::add_service(){
         out.close();
         out.clear();
     }
+
+    /*Write to EFT file*/
+    write_EFT(fee);
 }
 
 
@@ -591,7 +687,7 @@ void Terminal::manager_menu(){
                     data_link->sum_report();
                     break;
                 case 4:
-                    data_link->pull_EFT();
+                    //data_link->pull_EFT();
                     break;
                 case 5:
                     interactive_mode();

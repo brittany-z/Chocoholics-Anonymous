@@ -8,6 +8,7 @@
 
 // Data_center and Terminal Classes
 
+
 class Data_center{
 
     public:
@@ -21,8 +22,8 @@ class Data_center{
         int check_valid(const std::string & input); 
         void disp_map(int map_type);
         int person_report(const std::string & num);
-        void pull_EFT();
-        void sum_report();
+        int write_EFT(float fee) const;
+        int sum_report() const;
         int add_person(const Address & to_add, int type);
         int remove(const std::string & num); 
         int update(const std::string & num, const Address & to_update);

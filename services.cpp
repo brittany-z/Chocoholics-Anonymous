@@ -5,6 +5,10 @@ using namespace std;
 
 /* -------- SERVICE CLASS METHODS -------- */
 
+timestamp::timestamp(){
+
+    sec = min = hour = mday = mon = year = yday = wday = 0;
+}
 
 Service::Service(): fee(0){}
 
@@ -19,7 +23,15 @@ Service::Service(ifstream & in){
     getline(in, name, '|');
     in >> fee;
     in.ignore(100, '|');
-    getline(in, code, '|');
+    getline(in, code, '\n');
+}
+
+
+void Service::write_file(ofstream & out) const{
+
+    out << "$" << name << "|" 
+        << fee << "|" 
+        << code << endl;
 }
 
 
@@ -32,7 +44,7 @@ void Service::write_report(ofstream & out, int type) const{
         out << "\nService name: " << name << endl;
     else
         out << "\nService code: " << code
-            << "\nService fee: " << fee << endl;
+            << "\nService fee: $" << fee << endl;
 }
 
 
@@ -49,13 +61,6 @@ void Service::set_test(){
 void Service::disp_name() const{
 
     cout << endl << name << endl;
-}
-
-
-/*Used to display fee when adding a service*/
-void Service::disp_fee() const{
-
-    cout << "\nFee for this service: $" << fee << endl;
 }
 
 
@@ -105,8 +110,23 @@ Serv_date::Serv_date(const Service & curr_serv, const Serv_date & date):
 /*Constructor that sets the data to what is read from
  * the file.*/
 Serv_date::Serv_date(ifstream & in): Service(in){
+
+    in >> day;
+    in.ignore(100, '|');
+    in >> month;
+    in.ignore(100, '|');
+    in >> year;
+    in.ignore(100, '|');
 }
 
+
+void Serv_date::write_file(ofstream & out) const{
+
+    Service::write_file(out);
+    out << day << "|"
+        << month << "|"
+        << year;
+}
 
 /*This method reads in the service date. It checks for valid
  * logical date responses and that a future date is not provided.
@@ -254,18 +274,27 @@ bool Serv_date::check_week() const{
     /*Point to tm_struct in object*/
     tm * curr = localtime(&now);
 
-    /*Check if the service month and year are the current
-     * month and year*/
-    if(curr->tm_year + 1900 == year && curr->tm_mon + 1 == month)
-    {
-        /*Get the difference of the current day and service day
-         * and then check if the difference is within the number
-         * of days since sunday (tm_wday) to see if the service
-         * occurred within the current week.*/
-        int diff = curr->tm_mday - day;
-        if (diff >= 0 && diff <= curr->tm_wday)
-            return true;
-    }
+    int curr_year = curr->tm_year;
+    int curr_mon = curr->tm_mon;
+    int curr_mday = curr->tm_mday;
+    int curr_yday = curr->tm_yday;
+    int curr_wday = curr->tm_wday;
+    
+    time_t info = time(&info);
+    tm * dtinfo = localtime(&info);
+    dtinfo->tm_mon = month - 1;
+    dtinfo->tm_mday = day;
+    dtinfo->tm_year = year - 1900;
+    info = mktime(dtinfo);
+
+    int diff = -1;
+
+    if (curr_year - dtinfo->tm_year == 1 && dtinfo->tm_mon - curr_mon == 11)
+        diff = 31 + curr_mday - dtinfo->tm_mday;
+    else if (curr_year == dtinfo->tm_year)
+        diff = curr_yday - dtinfo->tm_yday;
+    if (diff != -1 && diff <= curr_wday)
+        return true;
     return false;
 }
 
@@ -293,7 +322,31 @@ Provider_service::Provider_service(){}
 
 /*Constructor that sets the data to what is read from
  * the file.*/
-Provider_service::Provider_service(ifstream & in): Serv_date(in){
+Provider_service::Provider_service(ifstream & in): Serv_date(in), mem_info(in){
+
+    in.ignore(100, '\n');
+    in >> recv.sec;
+    in.ignore(100, '|');
+    in >> recv.min;
+    in.ignore(100, '|');
+    in >> recv.hour;
+    in.ignore(100, '|');
+    in >> recv.mday;
+    in.ignore(100, '|');
+    in >> recv.mon;
+    in.ignore(100, '|');
+    in >> recv.year;
+    in.ignore(100, '|');
+    in >> recv.yday;
+    in.ignore(100, '|');
+    in >> recv.wday;
+
+    char flag;
+    in >> flag;
+    if (flag == '&')
+        getline(in, comments, '\n');
+    else
+        in.ignore(100, '\n');
 }
 
 
@@ -310,7 +363,41 @@ Provider_service::Provider_service(const Name & curr_mem,
 
     //Set the time and date that the data was received by 
     //the data center
-    received = time(0);
+    time_t now = time(&now);
+    tm * curr = localtime(&now);
+    recv.sec = curr->tm_sec;
+    recv.min = curr->tm_min;
+    recv.hour = curr->tm_hour;
+    recv.mday = curr->tm_mday;
+    recv.mon = curr->tm_mon;
+    recv.year = curr->tm_year;
+    recv.yday = curr->tm_yday;
+    recv.wday = curr->tm_wday;
+}
+
+
+void Provider_service::write_file(ofstream & out) const{
+
+    Serv_date::write_file(out);
+    mem_info.write_file(out);
+    out << endl << recv.sec << "|"
+        << recv.min << "|"
+        << recv.hour << "|"
+        << recv.mday << "|"
+        << recv.mon << "|"
+        << recv.year << "|"
+        << recv.yday << "|"
+        << recv.wday;
+    if (!comments.empty())
+        out << "&" << comments << endl;
+    else
+        out << "|" << endl;
+}
+
+
+string Provider_service::get_memkey() const{
+
+    return mem_info.get_key();
 }
 
 
@@ -347,33 +434,31 @@ void Provider_service::write_report(ofstream & out) const{
 
     Serv_date::write_report(out);
 
-    tm * recv = localtime(&received);
-
     out << "\nReceived date and time: ";
-    if (recv->tm_mon + 1 < 10)
-        out << "0" << recv->tm_mon + 1;
+    if (recv.mon + 1 < 10)
+        out << "0" << recv.mon + 1;
     else
-        out << recv->tm_mon + 1;
+        out << recv.mon + 1;
     
-    if (recv->tm_mday < 10)
-        out << "-0" << recv->tm_mday;
+    if (recv.mday < 10)
+        out << "-0" << recv.mday;
     else
-        out << "-" << recv->tm_mday;
+        out << "-" << recv.mday;
 
-    out << "-" << recv->tm_year + 1900 << " ";
+    out << "-" << recv.year + 1900 << " ";
 
-    if (recv->tm_hour < 10)
-        out << "0" << recv->tm_hour;
+    if (recv.hour < 10)
+        out << "0" << recv.hour;
     else
-        out << ":" << recv->tm_hour;
-    if (recv->tm_min + 1 < 0)
-        out << ":0" << recv->tm_min + 1;
+        out << recv.hour;
+    if (recv.min + 1 < 0)
+        out << ":0" << recv.min + 1;
     else
-        out << ":" << recv->tm_min + 1;
-    if (recv->tm_sec < 10)
-        out << ":0" << recv->tm_sec << endl;
+        out << ":" << recv.min + 1;
+    if (recv.sec < 10)
+        out << ":0" << recv.sec << endl;
     else
-        out  << ":" << recv->tm_sec << endl;
+        out  << ":" << recv.sec << endl;
 
     mem_info.write_report(out);
     Service::write_report(out, 2);
@@ -384,8 +469,30 @@ void Provider_service::write_report(ofstream & out) const{
 void Provider_service::write_comm(ofstream & out) const{
 
     if (!comments.empty())
-        out << "\nComments: " << comments << endl;
+        out << "\nComments: " << comments;
+    out << '\n';
 }
+
+
+/*Checks if the received date is within the current week.
+ * Returns true if it is and false if not.*/
+bool Provider_service::check_recv_week() const{
+
+    /*Get current date*/
+    time_t now = time(0);
+    tm * curr = localtime(&now);
+
+    int diff = -1;
+
+    if (curr->tm_year - recv.year == 1 && recv.mon - curr->tm_mon == 11)
+        diff = 31 + curr->tm_mday - recv.mday;
+    else if (curr->tm_year == recv.year)
+        diff = curr->tm_yday - recv.yday;
+    if (diff != -1 && diff <= curr->tm_wday)
+        return true;
+    return false;
+}
+
 
 
 //For testing
@@ -397,7 +504,6 @@ void Provider_service::display_all() const
     Service::display();
     cout << "\nService date:";
     Serv_date::display();
-    cout << "\nDate received: " << ctime(&received);
     cout << "\nComments:\n" << comments << endl;
 }
 
@@ -411,8 +517,7 @@ Member_service::Member_service(){}
 
 /*Constructor that sets the data to what is read from
  * the file.*/
-Member_service::Member_service(ifstream & in): Serv_date(in){
-}
+Member_service::Member_service(ifstream & in): Serv_date(in){}
 
 
 /*This constructor copies the necessary data from a 
