@@ -45,15 +45,19 @@ class Provider: public Address{
         Provider();
         Provider(std::ifstream & in);
         Provider(const Address & to_add);
-        bool check_week() const;
+        void write_file(std::ofstream & out) const;
+        bool check_week(int type) const;
         void write_report(std::ofstream & out) const;
         void write_rec_curr_DT(std::ofstream & out) const;
         int add_service(const Provider_service & to_add);
         //For testing. Displays all info in hierarchy.
         void display_all() const;
+        float get_fees() const;
+        unsigned short get_num_billed() const;
 
     private:
         unsigned short num_consults;
+        unsigned short num_billed;
         float total_fees;
         std::list<Provider_service> serv_list;
 };

@@ -59,7 +59,7 @@ string Name::gen_num(char first_num){
  * changed depending on file formatting.*/
 void Name::write_file(ofstream & out) const{
 
-    out << '|' << a_name << '|'
+    out << "|" << a_name << "|"
         << ID_num << '|';
 }
 
@@ -67,8 +67,7 @@ void Name::write_file(ofstream & out) const{
 /*Writes to report*/
 void Name::write_report(ofstream & out) const{
 
-    out << "Name: ";
-    out << a_name;
+    out << "\nName: " << a_name;
     out << "\nNumber: " << ID_num;
 }
 

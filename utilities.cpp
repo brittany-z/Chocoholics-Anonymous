@@ -199,7 +199,7 @@ void write_curr_DT(ofstream & out){
     if (curr->tm_hour < 10)
         out << "0" << curr->tm_hour;
     else
-        out << ":" << curr->tm_hour;
+        out << curr->tm_hour;
     if (curr->tm_min + 1 < 0)
         out << ":0" << curr->tm_min + 1;
     else
@@ -210,3 +210,5 @@ void write_curr_DT(ofstream & out){
         out  << ":" << curr->tm_sec;
 }
 
+
+//bool check_date(
