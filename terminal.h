@@ -47,6 +47,8 @@ class Terminal{
         void manager_menu();
         void start_menu();
         void interactive_mode();
+        int validate(std::string & ID_num) const;
+        int mem_validate(const std::string & ID_num) const;
     
     private:
         Data_center * data_link;

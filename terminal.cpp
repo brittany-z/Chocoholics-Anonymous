@@ -195,7 +195,6 @@ int Data_center::check_valid(const string & input){
         }
       default:
         ret = -1;
-        break;
     }
     return ret;
 }
@@ -245,7 +244,6 @@ void Data_center::disp_map(int map_type){
                 break;
             }
         default: cerr << "\nInvalid map type\n";
-            break;
     }
 }
 
@@ -292,7 +290,6 @@ int Data_center::person_report(const string & num) {
             break;
         default:
             return -1; //First char isn't 1 or 2
-            break;
     }
 
     /*Get the name of the person*/
@@ -448,7 +445,6 @@ int Data_center::remove(const string & num){
             break;
         default:
             ret = -1;
-            break;
     }
     return ret;
 }
@@ -490,7 +486,6 @@ int Data_center::update(const string & num, const Address & update_to){
             }
           default:
             ret = -1;
-            break;
         }
         return ret;
 }
@@ -599,7 +594,6 @@ Terminal::Terminal(Data_center & link){
 }
 
 
-/*CANNOT ADD SERVICES IF THE MEMBER IS SUSPENDED*/
 void Terminal::provider_menu(){
 
     // Clear screen
@@ -607,14 +601,15 @@ void Terminal::provider_menu(){
         cout << "\n";
     }
     
-    cout << "Welcome to the Provider Menu.\n\n";
+    cout << "Welcome to the Provider Terminal\n\n";
     int choice = 0;
 
     do{
-        cout << "Here are your options:\n\n"
-             << "\t(1)  Input a Service\n"
-             << "\t(2)  Request Provider Directory\n"
-             << "\t(3)  Exit\n"
+        cout << "\nHere are your options:\n\n"
+             << "\t(1)  Member Check-in\n"
+             << "\t(2)  Bill for a Service\n"
+             << "\t(3)  Request Provider Directory\n"
+             << "\t(4)  Exit\n"
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
@@ -625,23 +620,24 @@ void Terminal::provider_menu(){
             cout << "\n";
         }
 
-        if(choice >= 1 && choice <= 2){
-            switch(choice){
-                case 1:
-                    /*Make sure member is not suspended*/
+        switch(choice){
+            case 1:
+                mem_validate(read_num(4));
+                break;
+            case 2:
+                if (mem_validate(read_num(4)))
                     data_link->add_service();
-                    break;
-                case 2:
-                    data_link->disp_map(3);
-                    break;
-            }
+                break;
+            case 3:
+                data_link->disp_map(3);
+                break;
+            case 4:
+                break;
+            default:
+                cout << "Error: Invalid selection. Please try again.\n\n";
         }
 
-        else if(choice != 3){
-            cout << "Error: Invalid selection. Please try again.\n\n";
-        }
-
-    }while(choice != 3);
+    }while(choice != 4);
     
     return;
 }
@@ -654,17 +650,15 @@ void Terminal::manager_menu(){
         cout << "\n";
     }
     
-    cout << "Welcome to the Manager Menu.\n\n";
+    cout << "Welcome to the Manager Terminal\n\n";
     int choice = 0;
 
     do{
-        cout << "Here are your options:\n\n"
-             << "\t(1)  Run Member Report\n"
-             << "\t(2)  Run Provider Report\n"
-             << "\t(3)  Run Summary Report\n"
-             << "\t(4)  Pull EFT Data\n"
-             << "\t(5)  Run Interactive Mode\n"
-             << "\t(6)  Exit\n\n"
+        cout << "\nHere are your options:\n\n"
+             << "\t(1)  Run Provider or Member Report\n"
+             << "\t(2)  Run Summary Report\n"
+             << "\t(3)  Run Interactive Mode\n"
+             << "\t(4)  Exit\n\n"
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
@@ -675,31 +669,34 @@ void Terminal::manager_menu(){
             cout << "\n";
         }
 
-        if(choice >= 1 && choice <= 5){
-            switch(choice){
-                case 1:
-                    //data_link->person_report(); 
-                    break;
-                case 2:
-                    //data_link->person_report();
-                    break;
-                case 3:
-                    data_link->sum_report();
-                    break;
-                case 4:
-                    //data_link->pull_EFT();
-                    break;
-                case 5:
-                    interactive_mode();
-                    break;
-            }
+        switch(choice){
+            case 1:
+                {
+                    string num(read_num(3));
+                    if (num[0] != '1' || num[0] != '2')
+                        cout << "\nError: Member or provider number not provided\n";
+                    else
+                    {
+                        if (validate(num))
+                            if (!data_link->person_report(num))
+                                cout << "\nThis user was not active this week, no report generated\n";
+                    }
+                }
+                break;
+            case 2:
+                if (!data_link->sum_report())
+                    cout << "\nNo providers stored in the system\n";
+                break;
+            case 3:
+                interactive_mode();
+                break;
+            case 4:
+                break;
+            default:
+                cout << "Error: Invalid selection. Please try again.\n\n";
         }
 
-        else if(choice != 6){
-            cout << "Error: Invalid selection. Please try again.\n\n";
-        }
-
-    }while(choice != 6);
+    }while(choice != 4);
     
     return;
 }
@@ -712,15 +709,16 @@ void Terminal::interactive_mode(){
         cout << "\n";
     }
     
-    cout << "Welcome to Interactive Mode.\n\n";
+    cout << "Welcome to Interactive Mode\n\n";
     int choice = 0;
 
     do{
-        cout << "Here are your options:\n\n"
-             << "\t(1)  Add a new Provider or Member\n"
-             << "\t(2)  Remove an existing Provider or Member\n"
-             << "\t(3)  Update existing Provider or Member records\n"
-             << "\t(4)  Exit\n\n"
+        cout << "\nHere are your options:\n\n"
+             << "\t(1)  Add a new Provider\n"
+             << "\t(2)  Add a new Member\n"
+             << "\t(3)  Remove an existing Provider or Member\n"
+             << "\t(4)  Update existing Provider or Member address\n"
+             << "\t(5)  Exit\n\n"
              << "Please enter the number corresponding to your selection: ";
 
         cin >> choice;
@@ -731,22 +729,51 @@ void Terminal::interactive_mode(){
             cout << "\n";
         }
 
-        if(choice >= 1 && choice <= 3){
-            switch(choice){
-                case 1:
-                    //data_link->add_person();
-                    break;
-                case 2:
-                    //data_link->remove();
-                    break;
-                case 3:
-                    //data_link->update();
-                    break;
-            }
-        }
-
-        else if(choice != 4){
-            cout << "Error: Invalid selection. Please try again.\n\n";
+        switch(choice){
+            case 1:
+                {
+                    Address mem;
+                    mem.read();
+                    data_link->add_person(mem, 1);
+                }
+                break;
+            case 2:
+                {
+                    Address prov;
+                    prov.read();
+                    data_link->add_person(prov, 2);
+                }
+                break;
+            case 3:
+                {
+                    string num(read_num(3));
+                        if (validate(num))
+                        {
+                            if (data_link->remove(num) == -1)
+                                cout << "\nError: Member or provider number not provided\n";
+                        }
+                }
+                break;
+            case 4:
+                {
+                    string num(read_num(3));
+                    if (num[0] != '1' || num[0] != '2')
+                        cout << "\nError: Member or provider number not provided\n";
+                    else
+                    {
+                        if (validate(num))
+                        {
+                            Address temp;
+                            temp.change_address();
+                            data_link->update(num, temp);
+                        }
+                    }
+                }
+                break;
+            case 5:
+                break;
+            default:
+                cout << "Error: Invalid selection. Please try again.\n\n";
         }
 
     }while(choice != 4);
@@ -762,13 +789,13 @@ void Terminal::start_menu(){
         cout << "\n";
     }
 
-    cout << "Welcome to the Chocoholics Anonymous terminal.\n\n";
+    cout << "Welcome to the Chocoholics Anonymous System\n\n";
 
     string ID_num(read_num(1));
     char first_num = ID_num[0];
    
     // Checking if the user is not a Provider nor a Manager.
-    if(first_num != '2' && first_num != '3'){
+    if((first_num != '2' && first_num != '3') || !validate(ID_num)){
         for(int i = 0; i < 100; ++i){
             cout << "\n";
         }
@@ -779,50 +806,64 @@ void Terminal::start_menu(){
         return;
     }
 
-    //validate(data_link, ID_num);
-
-    if(data_link->check_valid(ID_num) < 0){
-        // More to do here, depends on what messages/options
-        // check_valid provides on the Data_center side.
-        return;
-    }
-
-    if(first_num == '3'){ // Manager
+    if(first_num == '3') // Manager
         manager_menu();
-    }
-
-    else{
+    else
         provider_menu();
-    }
-
 
     return;
 }
 
-/* Some stuff written in case Data_center doesn't handle the error messages.
-int Terminal::validate(const Data_center * link, string & ID_num){
+// Some stuff written in case Data_center doesn't handle the error messages.
+int Terminal::validate(string & ID_num) const{
 
-    int valid = link->check_valid(ID_num); // returns 0 for valid, -1 for invalid
+    //int valid = 0;
     char response;
+    //Returns 0 for valid, -1 for invalid, -2 for valid but suspended,
+    // and -3 if the map is empty
+    int valid = data_link->check_valid(ID_num);
 
-    while(valid == -1){
-        cout << "Error: Invalid user ID number.\n"
-             << "The user ID number entered was not found in the ChocAn Data Center.\n"
-             << "Would you like to try again? (Y/N): ";
+    
+    while(valid != 0)
+    {
+        if (valid == -1)
+            cout << "Error: Invalid user ID number.\n"
+                 << "The user ID number entered was not found in the ChocAn Data Center.\n";
+        else if (valid == -3)
+            cout << "There are no users of this type stored in the ChocAn Data Center system.\n";
+            
+        cout << "Would you like to try again? (Y/N): ";
+
         cin >> response;
         cin.ignore(100, '\n');
         response = toupper(response);
 
-        if(response == 'N'){
-          return 0;
-        }
+        if (response == 'N')
+            return 0;
 
         ID_num = read_num(1);
-
-        valid = link->check_valid(ID_num, set);
+        valid = data_link->check_valid(ID_num);
     }
 
     return 1;
 }
 
-*/
+
+int Terminal::mem_validate(const string & ID_num) const{
+
+    int valid = data_link->check_valid(ID_num);
+    int ret = 0;
+
+    if (valid == -3 || valid == -1 || ID_num[0] != '1')
+        cout << "\nINVALID\n\n";
+    
+    if (!valid)
+    {
+        cout << "\nVALIDATED\n\n";
+        ret = 1;
+    }
+    else
+        cout << "\nMEMBER SUSPENDED\n\n";
+
+    return ret;
+}
