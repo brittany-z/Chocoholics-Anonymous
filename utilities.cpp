@@ -108,25 +108,29 @@ bool equal_max(size_t str_len, size_t max)
  * type of data we are reading. 1 for a user number and 2 
  * for a service code. It returns a copy of the string that 
  * was read in. Type 3 is for general entering of ID number 
- * (updating removing).*/
+ * (updating removing). Type 4 is for enetering a member's
+ * ID number.*/
 string read_num(int type)
 {
     size_t max = 0;
     string temp;
     do
     {
-        if (type == 1 || type == 3)
-        {
-            if (type == 1)
-                cout << "\nPlease enter your unique user ID number: ";
-            else
-                cout << "\nPlease enter the ID number: ";
-            max = ID_MAX;
-        }
-        else if (type == 2)
+        if (type == 2)
         {
             cout << "\nPlease enter service code: ";
             max = CODE_MAX;
+        }
+        else
+        {
+            if (type == 1)
+                cout << "\nPlease enter your unique user ID number: ";
+            else if (type == 3)
+                cout << "\nPlease enter the ID number: ";
+            else
+                cout << "\nPlease enter the member's ID number: ";
+
+            max = ID_MAX;
         }
         cin >> temp;
         cin.ignore(100, '\n');
@@ -211,4 +215,3 @@ void write_curr_DT(ofstream & out){
 }
 
 
-//bool check_date(
