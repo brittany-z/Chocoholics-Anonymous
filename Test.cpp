@@ -68,13 +68,15 @@ TEST_CASE("Testing provider.check_week()") {
   //Not sure how to test this
 
 }
-
+*/
 TEST_CASE("Testing provider.add_service()") {
 
-  //Not sure how to test this
+	Provider_service Ptest;
+	Provider test;
+	CHECK(test.add_service(Ptest) == 1);
 
 }
-*/
+
 
 //Member tests:
 TEST_CASE("Testing member.check_week()") {
@@ -118,13 +120,18 @@ TEST_CASE("Testing Serv_date.compare_date()") {
 
 //Provider_service tests:
 
-/*
-TEST_CASE("Testing Provider_service.get_memkey()") {
 
-  //Not sure how to test this
+TEST_CASE("Testing Provider_service.get_memkey()") {
+	
+	Name test_name;
+	std::string check = test_name.gen_num('1');
+	Service test_serv;
+	Serv_date test_date;
+	Provider_service test_service(test_name, test_serv, test_date);
+	CHECK(check == test_service.get_memkey());
 
 }
-
+/*
 TEST_CASE("Testing Provider_service.check_recv_week()") {
 
   //Not sure how to test this
@@ -146,12 +153,18 @@ TEST_CASE("Testing Data_center.add_person()") {
 
 }
 
-/*
+
 TEST_CASE("Testing Data_center.remove()") {
 
-  //Not sure how to test this
-}
+	Data_center center;
+	Address test;
+	std::string id = test.gen_num('1');
+	CHECK(center.add_person(test, 1) == 1);
+	CHECK(center.remove(id) == 0);
+	CHECK(center.remove("ruhrohwhyudodis") == -1);
 
+}
+/*
 TEST_CASE("Testing Data_center.update()") {
 
   //Not sure how to test this
