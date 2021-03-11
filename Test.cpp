@@ -5,7 +5,7 @@
 #include "name.h"
 #include "utilities.h"
 #include "services.h"
-#define MAXTESTS 500
+#define MAXTESTS 100
 
 
 //Name tests:
@@ -62,13 +62,6 @@ TEST_CASE("Testing equal_max()") {
 //Address tests:
 
 //Provider tests:
-/*
-TEST_CASE("Testing provider.check_week()") {
-
-  //Not sure how to test this
-
-}
-*/
 TEST_CASE("Testing provider.add_service()") {
 
 	Provider_service Ptest;
@@ -131,14 +124,18 @@ TEST_CASE("Testing Provider_service.get_memkey()") {
 	CHECK(check == test_service.get_memkey());
 
 }
-/*
+
 TEST_CASE("Testing Provider_service.check_recv_week()") {
 
-  //Not sure how to test this
+	Name test_name;
+	Service test_serv;
+	Serv_date test_date;
+  Provider_service test(test_name, test_serv, test_date);
+	CHECK(test.check_recv_week() == true);
 
 }
 
-*/
+
 
 //Data_center tests
 
@@ -164,12 +161,24 @@ TEST_CASE("Testing Data_center.remove()") {
 	CHECK(center.remove("ruhrohwhyudodis") == -1);
 
 }
-/*
+
 TEST_CASE("Testing Data_center.update()") {
 
-  //Not sure how to test this
+  Data_center center;
+	CHECK(center.read_files() == 1);
+	Address test;
+	Address test2;
+	std::string id = test.gen_num('1');
+	std::string id2 = test2.gen_num('2');
+	CHECK(center.add_person(test, 1) == 1);
+	CHECK(center.add_person(test2, 2) == 1);
+	CHECK(center.update("1invalidID", test) == 0);
+	CHECK(center.update("109472837", test) == 1);
+	CHECK(center.update("02321234",test) == -1);
+	CHECK(center.update("298578401", test2) == 1);
+	
 }
-*/
+
 
 TEST_CASE("Testing Data_center.read_files()") {
     Data_center center;
