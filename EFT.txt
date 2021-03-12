@@ -6,3 +6,27 @@ Fee: $85
 Name: Jonathan Briggs
 Number: 298578401
 Fee: $75
+
+Name: Griffin Miller
+Number: 276599478
+Fee: $65
+
+Name: Nathan Berlusconi
+Number: 278500275
+Fee: $90
+
+Name: Emma Baker
+Number: 288594710
+Fee: $90
+
+Name: Kathy Lichtenstein
+Number: 209589203
+Fee: $80
+
+Name: Nathan Berlusconi
+Number: 278500275
+Fee: $65
+
+Name: Michael Campbell
+Number: 251957203
+Fee: $75
