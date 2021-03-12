@@ -314,6 +314,14 @@ void Serv_date::set_test(){
 }
 
 
+void Serv_date::set_false_test(){
+
+    month = 3;
+    day = 6;
+    year = 2021;
+}
+
+
 /* -------- PROVIDER_SERVICE CLASS METHODS -------- */
 
 
@@ -493,6 +501,32 @@ bool Provider_service::check_recv_week() const{
     return false;
 }
 
+
+void Provider_service::set_false_test(){
+
+    //2021
+    recv.year = 121;
+    //march
+    recv.mon = 2;
+    //6th
+    recv.mday = 6;
+    //64 days since Jan 1st
+    recv.yday = 64;
+    //saturday
+    recv.wday = 6;
+}
+
+
+void Provider_service::set_true_test(){
+
+    time_t now = time(0);
+    tm * curr = localtime(&now);
+    recv.year = curr->tm_year;
+    recv.mon = curr->tm_mon;
+    recv.mday = curr->tm_mday;
+    recv.yday = curr->tm_yday;
+    recv.wday = curr->tm_wday;
+}
 
 
 //For testing
