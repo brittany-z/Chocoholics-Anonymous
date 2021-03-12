@@ -821,7 +821,7 @@ void Terminal::interactive_mode(){
                 cout << "Error: Invalid selection. Please try again.\n\n";
         }
 
-    }while(choice != 4);
+    }while(choice != 5);
     
     return;
 }
