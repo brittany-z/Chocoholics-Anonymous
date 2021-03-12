@@ -1,0 +1,14 @@
+
+Current date and time: 03-10-2021 16:47:05
+Service date: 01-01-2021
+Provider number: 288594710
+Member number: 177830028
+Service code: 934831
+Comments: The patient is making good progress
+
+Current date and time: 03-10-2021 16:53:31
+Service date: 05-03-2020
+Provider number: 298578401
+Member number: 107483984
+Service code: 143765
+Comments: Member is making great progress!

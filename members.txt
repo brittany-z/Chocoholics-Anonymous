@@ -1,3 +1,12 @@
+|Seito Watanabe|109684004|3728 Beulah Rd|Hurlock|DE|21655|0
+|John Erickson|104739434|1355 Santa Fe Dr|Denver|CO|80204|1
+|Max Trinkenschuh|194758920|899 SW 5th Ave|Minot|ND|58701|0
+|Anfisa Petukhov|195720583|7192 NW 7th St|Jeffrey City|WY|82310|1
+|Elaine Pedersen|173927583|8273 NW Riversong Road|Priest River|ID|83856|0
+|Terry Davis|100372942|9372 SW Kelly Ave|The Dalles|OR|97058|1
+|Robin Banks|175928472|8726 SE Main Street|Tulsa|OK|98817|0
+|Qian Tao|174928690|4627 NW Seaton Ave|Banks Lake|WA|99124|0
+|Seymour Butz|128461839|4628 NW Elm Street|Goose Creek|NE|75524|0
 |Weylan Nielson|177830028|799 SW Hilltop Rd|Salt Lake City|UT|84103|0
 |Elizabeth Doherty|184739482|189 W Hopson St|Bad Axe|MI|48413|1
 |Sarah Johnson|174829573|8392 N Race St|New Hampton|MO|50049|1
@@ -8,16 +17,7 @@
 |Bridgette Oleson|107483984|3599 SW Ruth St|Houston|TX|77004|0
 |Shaquille O'Neal|109472837|9927 Giffin Court|Windermere|FL|34786|0
 |Lucy Sanchez|174850395|164 Crosby St|New York|NY|10012|0
-|Jeffrey Clement|185739948|322 Cherry St|Mt Pleasant|MI|48858|0
+|Claire Hardy|100936627|2101 SE Stanford Dr|Albuquerque|NM|87106|0
 |Peter Boghossian|184729574|NW 179th Pl|Portland|OR|97229|1
 |Peter Adaney|163820573|6473 SE Dust Crescent|Humboldt|CA|47389|0
-|Claire Hardy|100936627|2101 SE Stanford Dr|Albuquerque|NM|87106|0
-|Seymour Butz|128461839|4628 NW Elm Street|Goose Creek|NE|75524|0
-|Qian Tao|174928690|4627 NW Seaton Ave|Banks Lake|WA|99124|0
-|Robin Banks|175928472|8726 SE Main Street|Tulsa|OK|98817|0
-|Terry Davis|100372942|9372 SW Kelly Ave|The Dalles|OR|97058|1
-|Elaine Pedersen|173927583|8273 NW Riversong Road|Priest River|ID|83856|0
-|Anfisa Petukhov|195720583|7192 NW 7th St|Jeffrey City|WY|82310|1
-|Max Trinkenschuh|194758920|899 SW 5th Ave|Minot|ND|58701|0
-|John Erickson|104739434|1355 Santa Fe Dr|Denver|CO|80204|1
-|Seito Watanabe|109684004|3728 Beulah Rd|Hurlock|DE|21655|0
+|Jeffrey Clement|185739948|322 Cherry St|Mt Pleasant|MI|48858|0
