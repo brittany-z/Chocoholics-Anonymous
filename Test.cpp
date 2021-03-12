@@ -108,7 +108,18 @@ TEST_CASE("Testing Serv_date.compare_date()") {
   
   CHECK(Test1.compare_date(Test2) == 1);
   CHECK(Test2.compare_date(Test1) == 1);
+}
 
+
+TEST_CASE("Testing Serv_date.check_week()") {
+
+    Serv_date test1;
+    test1.set_test();
+    Serv_date test2;
+    test2.set_false_test();
+
+    CHECK(test1.check_week());
+    CHECK(!test2.check_week());
 }
 
 //Provider_service tests:
@@ -125,6 +136,7 @@ TEST_CASE("Testing Provider_service.get_memkey()") {
 
 }
 
+
 TEST_CASE("Testing Provider_service.check_recv_week()") {
 
 	Name test_name;
@@ -135,6 +147,18 @@ TEST_CASE("Testing Provider_service.check_recv_week()") {
 
 }
 
+
+TEST_CASE("Testing Provider_service.check_recv_week()") {
+
+  Provider_service test1;
+  test1.set_false_test();
+  Provider_service test2;
+  test2.set_true_test();
+
+  CHECK(!test1.check_recv_week());
+  CHECK(test2.check_recv_week());
+
+}
 
 
 //Data_center tests

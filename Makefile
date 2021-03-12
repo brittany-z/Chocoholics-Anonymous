@@ -18,3 +18,4 @@ Test: Test.o $(objects)
 	rm *.o
 	./Test
 	rm Test
+	rm SeymourButz*.txt

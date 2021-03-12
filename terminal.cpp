@@ -373,13 +373,13 @@ int Data_center::sum_report() const{
                 overall_fees += fees;
 
                 it->second.Name::write_report(out);
-                out << "\nNumber of consultations: " << consults
+                out << "\nNumber of consultations billed for this week: " << consults
                     << "\nTotal fees: $" << fees << endl;
             }
         }
         out << "\n\nTOTALS" << "\nProviders: " << num_prov
-            << "\nConsultations: " << total_consults
-            << "\nFees: " << overall_fees << endl;
+            << "\nTotal Consultations Billed: " << total_consults
+            << "\nFees this Week: " << overall_fees << endl;
         out.close();
         out.clear();
     }
@@ -576,6 +576,8 @@ void Data_center::add_service(){
 
     /*Write to EFT file*/
     write_EFT(fee);
+
+    cout << "\nService Billed\n";
 }
 
 
@@ -587,6 +589,36 @@ void Data_center::set_serv_test(){
 }
 
 
+/*This is stupidly written but I don't have time to think
+ * hard about it*/
+string Data_center::disp_name(const string & num) {
+
+    switch(num[0])
+    {
+        case '1':
+            {   
+                if (member_list.count(num))
+                    return member_list[num].get_name();
+            }
+            break;
+        case '2':
+            {
+                if (provider_list.count(num))
+                    return provider_list[num].get_name();
+            }
+            break;
+        case '3':
+            {
+                if (manager_list.count(num))
+                    return manager_list[num].get_name();
+            }
+        default:
+            return NULL;
+    }
+    return NULL;
+}
+
+
 /* -------- TERMINAL CLASS METHODS -------- */
 
 Terminal::Terminal(Data_center & link){
@@ -594,14 +626,14 @@ Terminal::Terminal(Data_center & link){
 }
 
 
-void Terminal::provider_menu(){
+void Terminal::provider_menu(const string & num){
 
     // Clear screen
     for(int i = 0; i < 100; ++i){
         cout << "\n";
     }
     
-    cout << "Welcome to the Provider Terminal\n\n";
+    cout << "Welcome to the Provider Terminal " << data_link->disp_name(num) << "\n\n";
     int choice = 0;
 
     do{
@@ -643,14 +675,14 @@ void Terminal::provider_menu(){
 }
 
 
-void Terminal::manager_menu(){
+void Terminal::manager_menu(const string & num){
 
     // Clear screen
     for(int i = 0; i < 100; ++i){
         cout << "\n";
     }
     
-    cout << "Welcome to the Manager Terminal\n\n";
+    cout << "Welcome to the Manager Terminal " << data_link->disp_name(num) << "\n\n";
     int choice = 0;
 
     do{
@@ -673,19 +705,27 @@ void Terminal::manager_menu(){
             case 1:
                 {
                     string num(read_num(3));
-                    if (num[0] != '1' || num[0] != '2')
+                    if (num[0] != '1' && num[0] != '2')
                         cout << "\nError: Member or provider number not provided\n";
                     else
                     {
                         if (validate(num))
+                        {
                             if (!data_link->person_report(num))
                                 cout << "\nThis user was not active this week, no report generated\n";
+                            else
+                                cout << "\nReport generated for " << data_link->disp_name(num) << endl;
+                        }
                     }
                 }
                 break;
             case 2:
-                if (!data_link->sum_report())
-                    cout << "\nNo providers stored in the system\n";
+                {
+                    if (!data_link->sum_report())
+                        cout << "\nNo providers stored in the system\n";
+                    else
+                        cout << "\nSummary Report Generated\n";
+                }
                 break;
             case 3:
                 interactive_mode();
@@ -734,14 +774,16 @@ void Terminal::interactive_mode(){
                 {
                     Address mem;
                     mem.read();
-                    data_link->add_person(mem, 1);
+                    if (data_link->add_person(mem, 1))
+                        cout << endl << mem.get_name() << "successfully added\n";
                 }
                 break;
             case 2:
                 {
                     Address prov;
                     prov.read();
-                    data_link->add_person(prov, 2);
+                    if(data_link->add_person(prov, 2))
+                        cout << endl << prov.get_name() << "successfully added\n";
                 }
                 break;
             case 3:
@@ -751,13 +793,15 @@ void Terminal::interactive_mode(){
                         {
                             if (data_link->remove(num) == -1)
                                 cout << "\nError: Member or provider number not provided\n";
+                            else
+                                cout << endl << data_link->disp_name(num) << " successfully removed\n";
                         }
                 }
                 break;
             case 4:
                 {
                     string num(read_num(3));
-                    if (num[0] != '1' || num[0] != '2')
+                    if (num[0] != '1' && num[0] != '2')
                         cout << "\nError: Member or provider number not provided\n";
                     else
                     {
@@ -766,6 +810,7 @@ void Terminal::interactive_mode(){
                             Address temp;
                             temp.change_address();
                             data_link->update(num, temp);
+                            cout << endl << data_link->disp_name(num) << " successfully updated\n";
                         }
                     }
                 }
@@ -807,9 +852,9 @@ void Terminal::start_menu(){
     }
 
     if(first_num == '3') // Manager
-        manager_menu();
+        manager_menu(ID_num);
     else
-        provider_menu();
+        provider_menu(ID_num);
 
     return;
 }
@@ -856,8 +901,7 @@ int Terminal::mem_validate(const string & ID_num) const{
 
     if (valid == -3 || valid == -1 || ID_num[0] != '1')
         cout << "\nINVALID\n\n";
-    
-    if (!valid)
+    else if (!valid)
     {
         cout << "\nVALIDATED\n\n";
         ret = 1;

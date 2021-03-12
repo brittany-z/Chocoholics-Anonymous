@@ -59,6 +59,7 @@ class Serv_date: public Service{
         void display() const;
         bool check_week() const;
         void set_test();
+        void set_false_test();
 
     protected:
         int month;
@@ -81,6 +82,8 @@ class Provider_service: public Serv_date{
         void write_comm(std::ofstream & out) const;
         bool check_recv_week() const;
         void display_all() const; //For testing
+        void set_false_test();
+        void set_true_test();
 
    private:
         timestamp recv;

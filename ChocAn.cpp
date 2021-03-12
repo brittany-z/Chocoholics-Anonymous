@@ -10,7 +10,7 @@ int main(){
     Terminal term(ChocAn);
     term.start_menu();
 
-    //ChocAn.write_file(); //Only if you want to save all changes (so save the txts)
+    ChocAn.write_file(); //Only if you want to save all changes (so save the txts)
     
     return 0;
 }
