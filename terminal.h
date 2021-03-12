@@ -29,6 +29,7 @@ class Data_center{
         int update(const std::string & num, const Address & to_update);
         void add_service();
         void set_serv_test();
+        std::string disp_name(const std::string & num);
 
     private:
         std::unordered_map<std::string, Provider> provider_list;
@@ -43,8 +44,8 @@ class Terminal{
 
     public:
         Terminal(Data_center & link);
-        void provider_menu();
-        void manager_menu();
+        void provider_menu(const std::string & num);
+        void manager_menu(const std::string & num);
         void start_menu();
         void interactive_mode();
         int validate(std::string & ID_num) const;

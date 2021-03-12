@@ -394,3 +394,5 @@ void Member::display_all() const{
     else
         cout << "\nMember NOT suspended\n";
 }
+
+

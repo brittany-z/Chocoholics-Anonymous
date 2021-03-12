@@ -5,7 +5,7 @@
 #include "name.h"
 #include "utilities.h"
 #include "services.h"
-#define MAXTESTS 500
+#define MAXTESTS 100
 
 
 //Name tests:
@@ -62,19 +62,14 @@ TEST_CASE("Testing equal_max()") {
 //Address tests:
 
 //Provider tests:
-/*
-TEST_CASE("Testing provider.check_week()") {
-
-  //Not sure how to test this
-
-}
-
 TEST_CASE("Testing provider.add_service()") {
 
-  //Not sure how to test this
+	Provider_service Ptest;
+	Provider test;
+	CHECK(test.add_service(Ptest) == 1);
 
 }
-*/
+
 
 //Member tests:
 TEST_CASE("Testing member.check_week()") {
@@ -113,25 +108,58 @@ TEST_CASE("Testing Serv_date.compare_date()") {
   
   CHECK(Test1.compare_date(Test2) == 1);
   CHECK(Test2.compare_date(Test1) == 1);
+}
 
+
+TEST_CASE("Testing Serv_date.check_week()") {
+
+    Serv_date test1;
+    test1.set_test();
+    Serv_date test2;
+    test2.set_false_test();
+
+    CHECK(test1.check_week());
+    CHECK(!test2.check_week());
 }
 
 //Provider_service tests:
 
-/*
-TEST_CASE("Testing Provider_service.get_memkey()") {
 
-  //Not sure how to test this
+TEST_CASE("Testing Provider_service.get_memkey()") {
+	
+	Name test_name;
+	std::string check = test_name.gen_num('1');
+	Service test_serv;
+	Serv_date test_date;
+	Provider_service test_service(test_name, test_serv, test_date);
+	CHECK(check == test_service.get_memkey());
 
 }
+
 
 TEST_CASE("Testing Provider_service.check_recv_week()") {
 
-  //Not sure how to test this
+	Name test_name;
+	Service test_serv;
+	Serv_date test_date;
+  Provider_service test(test_name, test_serv, test_date);
+	CHECK(test.check_recv_week() == true);
 
 }
 
-*/
+
+TEST_CASE("Testing Provider_service.check_recv_week()") {
+
+  Provider_service test1;
+  test1.set_false_test();
+  Provider_service test2;
+  test2.set_true_test();
+
+  CHECK(!test1.check_recv_week());
+  CHECK(test2.check_recv_week());
+
+}
+
 
 //Data_center tests
 
@@ -146,17 +174,35 @@ TEST_CASE("Testing Data_center.add_person()") {
 
 }
 
-/*
+
 TEST_CASE("Testing Data_center.remove()") {
 
-  //Not sure how to test this
+	Data_center center;
+	Address test;
+	std::string id = test.gen_num('1');
+	CHECK(center.add_person(test, 1) == 1);
+	CHECK(center.remove(id) == 0);
+	CHECK(center.remove("ruhrohwhyudodis") == -1);
+
 }
 
 TEST_CASE("Testing Data_center.update()") {
 
-  //Not sure how to test this
+  Data_center center;
+	CHECK(center.read_files() == 1);
+	Address test;
+	Address test2;
+	std::string id = test.gen_num('1');
+	std::string id2 = test2.gen_num('2');
+	CHECK(center.add_person(test, 1) == 1);
+	CHECK(center.add_person(test2, 2) == 1);
+	CHECK(center.update("1invalidID", test) == 0);
+	CHECK(center.update("109472837", test) == 1);
+	CHECK(center.update("02321234",test) == -1);
+	CHECK(center.update("298578401", test2) == 1);
+	
 }
-*/
+
 
 TEST_CASE("Testing Data_center.read_files()") {
     Data_center center;
