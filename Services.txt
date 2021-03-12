@@ -1,0 +1,54 @@
+
+Current date and time: 03-10-2021 16:47:05
+Service date: 01-01-2021
+Provider number: 288594710
+Member number: 177830028
+Service code: 934831
+Comments: The patient is making good progress
+
+Current date and time: 03-10-2021 16:53:31
+Service date: 05-03-2020
+Provider number: 298578401
+Member number: 107483984
+Service code: 143765
+Comments: Member is making great progress!
+
+Current date and time: 03-12-2021 14:17:02
+Service date: 04-03-2020
+Provider number: 276599478
+Member number: 177830028
+Service code: 487185
+Comments: Group therapy is working well for this patient, lets try different therapy method though.
+
+Current date and time: 03-12-2021 14:30:32
+Service date: 01-05-2021
+Provider number: 278500275
+Member number: 107483984
+Service code: 926680
+Comments: Maybe switch this patient to aerobics instead.
+
+Current date and time: 03-12-2021 14:44:07
+Service date: 01-03-2020
+Provider number: 288594710
+Member number: 100947287
+Service code: 352566
+
+Current date and time: 03-12-2021 14:45:35
+Service date: 04-03-2020
+Provider number: 209589203
+Member number: 194758920
+Service code: 691967
+
+Current date and time: 03-12-2021 14:49:13
+Service date: 02-03-2021
+Provider number: 278500275
+Member number: 163820573
+Service code: 769853
+Comments: Patient making good progress.
+
+Current date and time: 03-12-2021 15:16:31
+Service date: 03-12-2021
+Provider number: 251957203
+Member number: 108494778
+Service code: 525017
+Comments: Hypnotherapy being used for quitting smoking.
