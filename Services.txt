@@ -52,3 +52,48 @@ Provider number: 251957203
 Member number: 108494778
 Service code: 525017
 Comments: Hypnotherapy being used for quitting smoking.
+
+Current date and time: 03-12-2021 16:20:04
+Service date: 03-01-2021
+Provider number: 209579287
+Member number: 173927583
+Service code: 352566
+
+Current date and time: 03-12-2021 16:21:29
+Service date: 03-11-2021
+Provider number: 218847902
+Member number: 109684004
+Service code: 837946
+
+Current date and time: 03-12-2021 16:50:16
+Service date: 03-12-2021
+Provider number: 288594710
+Member number: 109472837
+Service code: 926680
+
+Current date and time: 03-12-2021 17:31:00
+Service date: 03-12-2021
+Provider number: 298578401
+Member number: 174850395
+Service code: 276027
+Comments: Good progress.
+
+Current date and time: 03-12-2021 17:33:54
+Service date: 03-12-2021
+Provider number: 285582019
+Member number: 119478390
+Service code: 177044
+Comments: Art is good for da soul!!
+
+Current date and time: 03-12-2021 17:36:52
+Service date: 03-12-2021
+Provider number: 209847892
+Member number: 177830028
+Service code: 352566
+
+Current date and time: 03-12-2021 17:40:05
+Service date: 03-12-2021
+Provider number: 278200578
+Member number: 108494778
+Service code: 352566
+Comments: Patient has spider phobia. We brought in 50 spiders for exposure therapy. He isnt scared anymore!

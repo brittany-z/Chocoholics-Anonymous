@@ -30,3 +30,31 @@ Fee: $65
 Name: Michael Campbell
 Number: 251957203
 Fee: $75
+
+Name: Robert Gonzalez
+Number: 209579287
+Fee: $90
+
+Name: Preston Maxwell
+Number: 218847902
+Fee: $70
+
+Name: Emma Baker
+Number: 288594710
+Fee: $90
+
+Name: Jonathan Briggs
+Number: 298578401
+Fee: $150
+
+Name: Robert McNulty
+Number: 285582019
+Fee: $50
+
+Name: Daryll Emmet
+Number: 209847892
+Fee: $90
+
+Name: Anne Smith
+Number: 278200578
+Fee: $90
